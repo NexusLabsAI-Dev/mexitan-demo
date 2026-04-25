@@ -639,6 +639,8 @@ async function doRegister(){
   if(pass!==pass2){ err.textContent='Las contraseñas no coinciden.'; return; }
   err.textContent=''; btn.disabled=true; btn.textContent='Creando cuenta...';
   try{
+    DemoStore.clear();
+    menuData = [];
     await firebase.auth().createUserWithEmailAndPassword(email, pass);
   }catch(e){
     let msg = 'Error al crear cuenta.';
@@ -1122,6 +1124,7 @@ async function doLogin(){
   err.textContent='';btn.disabled=true;btn.textContent=t('login_entrando');
   try{
     DemoStore.clear(); // sesión demo siempre empieza limpia
+    menuData = []; // forzar recarga con MENU_DEFAULT
     await firebase.auth().signInWithEmailAndPassword(email,pass);
   }catch(e){
     let msg=t('login_error');
