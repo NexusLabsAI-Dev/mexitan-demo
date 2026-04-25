@@ -14,6 +14,25 @@
 </head>
 <body>
 
+<!-- TRIAL BANNER -->
+<div id="trialBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9000;background:#b45309;color:#fff;text-align:center;padding:8px 16px;font-size:.85rem;font-weight:500;">
+  <span id="trialBannerMsg"></span>
+  &nbsp;·&nbsp;
+  <a id="trialBannerBtn" href="#" target="_blank" style="color:#fde68a;font-weight:700;text-decoration:none;">Renovar licencia</a>
+</div>
+
+<!-- LICENCIA BLOQUEADA -->
+<div id="licenciaBloqueo" style="display:none;position:fixed;inset:0;z-index:9999;background:#0d0d0d;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;font-family:sans-serif;">
+  <div style="font-size:3.5rem;margin-bottom:16px;">🔒</div>
+  <h2 style="color:#f5f0e8;font-size:1.5rem;margin-bottom:8px;" id="licenciaTitle">Período de prueba vencido</h2>
+  <p style="color:#9ca3af;font-size:.95rem;max-width:360px;line-height:1.6;" id="licenciaMsg">Tu período de prueba ha terminado. Contacta a NexusLabs para activar tu licencia y seguir usando el sistema.</p>
+  <a id="licenciaWaBtn" href="#" target="_blank" style="margin-top:28px;padding:14px 32px;background:#25d366;color:#fff;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.115.549 4.1 1.51 5.833L0 24l6.335-1.491A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.001-1.369l-.358-.214-3.759.885.949-3.665-.233-.375A9.787 9.787 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+    Contactar para renovar
+  </a>
+  <button onclick="firebase.auth().signOut()" style="margin-top:16px;background:none;border:none;color:#6b7280;cursor:pointer;font-size:.85rem;text-decoration:underline;">Cerrar sesión</button>
+</div>
+
 <!-- LOGIN SCREEN -->
 <div id="loginScreen">
   <div class="loginBox">
@@ -833,9 +852,13 @@ document.addEventListener('DOMContentLoaded',async()=>{
     if(user){
       $('loginScreen').style.display='none';
       const cfgU=$('cfgUserEmail');if(cfgU)cfgU.textContent=user.email||'';
+      await verificarLicencia();
       if(!menuData.length){ await loadMenu(); buildMenu(); }
     } else {
       $('loginScreen').style.display='flex';
+      $('licenciaBloqueo').style.display='none';
+      $('trialBanner').style.display='none';
+      document.body.style.paddingTop='';
     }
   });
 
@@ -1815,6 +1838,55 @@ if('serviceWorker' in navigator){
       window.location.reload();
     });
   });
+}
+
+// ═══════════════════════
+// LICENCIA
+// ═══════════════════════
+async function verificarLicencia(){
+  let licencia={plan:'activo'};
+  try{
+    const snap=await db.collection('config').doc('licencia').get();
+    if(snap.exists) licencia=snap.data();
+  }catch(_){ return; } // Sin reglas configuradas → permitir
+
+  const waNum=(licencia.contacto?.whatsapp||'').replace(/\D/g,'');
+  const waUrl=waNum?`https://wa.me/${waNum}?text=${encodeURIComponent('Hola, quiero renovar mi licencia del sistema de pedidos.')}`:'#';
+
+  // Plan suspendido
+  if(licencia.plan==='suspendido'){
+    $('licenciaTitle').textContent='Sistema suspendido';
+    $('licenciaMsg').textContent='Tu licencia está suspendida. Contacta a NexusLabs para reactivarla.';
+    $('licenciaWaBtn').href=waUrl;
+    $('licenciaBloqueo').style.display='flex';
+    return;
+  }
+
+  // Trial vencido
+  if(licencia.plan==='trial' && licencia.expira){
+    const hoy=new Date(); hoy.setHours(0,0,0,0);
+    const expira=new Date(licencia.expira); expira.setHours(0,0,0,0);
+    const diasRestantes=Math.ceil((expira-hoy)/(1000*60*60*24));
+
+    if(diasRestantes<0){
+      $('licenciaTitle').textContent='Período de prueba vencido';
+      $('licenciaMsg').textContent='Tu período de prueba ha terminado. Contacta a NexusLabs para activar tu licencia.';
+      $('licenciaWaBtn').href=waUrl;
+      $('licenciaBloqueo').style.display='flex';
+      return;
+    }
+
+    // Trial activo — mostrar banner
+    const banner=$('trialBanner');
+    const msg=diasRestantes===0
+      ?'Tu período de prueba vence hoy'
+      :`Período de prueba: ${diasRestantes} día${diasRestantes===1?'':'s'} restante${diasRestantes===1?'':'s'}`;
+    $('trialBannerMsg').textContent=msg;
+    $('trialBannerBtn').href=waUrl;
+    banner.style.display='block';
+    // Empujar contenido hacia abajo para no tapar nada
+    document.body.style.paddingTop='37px';
+  }
 }
 
 // ═══════════════════════
