@@ -425,7 +425,7 @@ emailjs.init({publicKey:'Ke33C7iKHDtnhqGKN'});
 const DEMO_COLS = new Set(['mesas','pedidos','cuentas','movimientos_cuenta','gastos','lista_compras','actividad']);
 const DEMO_DB_KEY  = 'pos_demo_db';
 const DEMO_T_KEY   = 'pos_demo_start';
-const DEMO_MINS    = 30;
+const DEMO_MINS    = 10080; // 7 días
 
 // ── Storage helpers ──
 const DemoStore = {
@@ -592,9 +592,14 @@ function _timerTick(){
     setTimeout(()=>firebase.auth().signOut(), 1500);
     return;
   }
-  const m=Math.floor(remaining/60000);
-  const s=Math.floor((remaining%60000)/1000);
-  if(badge){ badge.style.display=''; badge.textContent=`⏱ Demo ${m}:${s.toString().padStart(2,'0')}`; }
+  let display;
+  const days=Math.floor(remaining/86400000);
+  const hrs=Math.floor((remaining%86400000)/3600000);
+  const mins=Math.floor((remaining%3600000)/60000);
+  if(days>0) display=`${days}d ${hrs}h`;
+  else if(hrs>0) display=`${hrs}h ${mins}m`;
+  else display=`${mins}m`;
+  if(badge){ badge.style.display=''; badge.textContent=`⏱ Demo · ${display}`; }
 }
 
 // ── Login mode toggle ──
