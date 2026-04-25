@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mexitán — Sistema de Pedidos</title>
+  <title>Sistema POS</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#166a28" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Mexitán POS" />
+  <meta name="apple-mobile-web-app-title" content="Sistema POS" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
@@ -37,7 +37,7 @@
 <div id="loginScreen">
   <div class="loginBox">
     <div class="loginLogo">
-      <img src="Logo.png" alt="Mexitán" />
+      <img src="Logo.png" alt="Logo" />
     </div>
     <div class="loginTitle">Sistema de Pedidos</div>
     <div class="loginField">
@@ -55,7 +55,7 @@
 
 <header>
   <div style="display:flex;align-items:center;gap:.75rem">
-    <img src="Logo.png" alt="Mexitán" style="height:36px;width:auto;object-fit:contain" />
+    <img src="Logo.png" alt="Logo" style="height:36px;width:auto;object-fit:contain" />
     <div class="hdate" id="hDate"></div>
   </div>
   <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;justify-content:flex-end">
@@ -68,17 +68,18 @@
       <button class="tbtn" data-tab="b" onclick="swTab(this)" data-i18n="tab_compras">Compras</button>
       <button class="tbtn" data-tab="c" onclick="swTab(this)">⚙ Config</button>
     </div>
+    <button id="tourBtn" onclick="tourStart()" title="Tour del sistema" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:var(--b);border-radius:4px;padding:.28rem .65rem;font-size:.82rem;cursor:pointer;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">?</button>
     <button id="langBtn" onclick="toggleLang()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:var(--b);border-radius:4px;padding:.28rem .65rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;cursor:pointer;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">EN</button>
   </div>
 </header>
 <div class="appbody">
   <div id="vp" class="view active">
-    <div class="smesas">
-      <button class="bnm" onclick="openNM()" data-i18n="nueva_mesa">+ Nueva mesa</button>
+    <div class="smesas" id="tourMesas">
+      <button class="bnm" id="tourBtnMesa" onclick="openNM()" data-i18n="nueva_mesa">+ Nueva mesa</button>
       <div class="smhdr" data-i18n="mesas_activas">Mesas activas</div>
       <div class="smlist" id="smlist"></div>
     </div>
-    <div class="pmenu">
+    <div class="pmenu" id="tourMenu">
       <div id="nomesa" class="nomesa"><div style="font-size:2rem">←</div><div data-i18n="sin_mesa_msg">Abre o selecciona<br>una mesa para<br>tomar un pedido</div></div>
       <div id="mwrap" style="display:none">
         <div id="searchWrap" style="position:sticky;top:0;z-index:11;background:var(--gb);padding:.4rem 0 .2rem">
@@ -91,7 +92,7 @@
         <div id="mcont"></div>
       </div>
     </div>
-    <div class="porden">
+    <div class="porden" id="tourOrden">
       <div class="otop">
         <div class="omlbl" id="omlbl">Sin mesa</div>
         <input class="icli" id="icli" type="text" placeholder="Nombre del cliente (opcional)" data-i18n-ph="cliente_ph" oninput="updCli()" />
@@ -835,6 +836,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
       $('loginScreen').style.display='none';
       const cfgU=$('cfgUserEmail');if(cfgU)cfgU.textContent=user.email||'';
       await verificarLicencia();
+      tourAutoStart();
       if(!menuData.length){ await loadMenu(); buildMenu(); }
     } else {
       $('loginScreen').style.display='flex';
@@ -1562,7 +1564,7 @@ async function expHistorial(){
   const pedidos=await getPedidosRango(desde,hasta);
   if(!pedidos.length){toast(t('toast_no_ped_exp'));return;}
   const porFecha={};pedidos.forEach(p=>{if(!porFecha[p.fecha])porFecha[p.fecha]=[];porFecha[p.fecha].push(p);});
-  const filas=[['Mexitan - Historial'],['Periodo:',labelRango(desde,hasta)],[''],
+  const filas=[['Sistema POS - Historial'],['Periodo:',labelRango(desde,hasta)],[''],
     ['Fecha','#','Mesa','Cliente','Hora','Producto','Precio Unit.','Cantidad','Subtotal','Total Orden']];
   let totalGlobal=0;
   Object.keys(porFecha).sort().forEach(f=>{
@@ -1579,7 +1581,7 @@ async function expHistorial(){
   filas.push(['','','','','','','','','TOTAL:','$'+totalGlobal]);
   const csv=filas.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const suf=desde===hasta?desde:desde+'_'+hasta;
-  descargaCSV(csv,'mexitan_historial_'+suf+'.csv');toast(t('toast_hist_exp'));
+  descargaCSV(csv,'pos_historial_'+suf+'.csv');toast(t('toast_hist_exp'));
 }
 async function expResumen(){
   const desde=$('rdesde').value,hasta=$('rhasta').value;
@@ -1598,7 +1600,7 @@ async function expResumen(){
     if(!pr[n])pr[n]={precio:v.precio,qty:0,total:0};pr[n].qty+=v.qty;pr[n].total+=v.precio*v.qty;
   }));
   const so=Object.entries(pr).sort((a,b)=>b[1].qty-a[1].qty);const lbl=labelRango(desde,hasta);
-  const filas=[['Mexitan - Resumen'],['Periodo:',lbl],[''],
+  const filas=[['Sistema POS - Resumen'],['Periodo:',lbl],[''],
     ['RESUMEN FINANCIERO',''],
     ['Ventas Totales','$'+td],
     ['Pedidos realizados',pedidos.length],
@@ -1612,7 +1614,7 @@ async function expResumen(){
   filas.push(['','','TOTAL VENTAS:','$'+td]);
   const csv=filas.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
   const suf=desde===hasta?desde:desde+'_'+hasta;
-  descargaCSV(csv,'mexitan_resumen_'+suf+'.csv');toast(t('toast_res_exp'));
+  descargaCSV(csv,'pos_resumen_'+suf+'.csv');toast(t('toast_res_exp'));
 }
 
 // ═══════════════════════
@@ -1655,7 +1657,7 @@ async function emailHistorial(){
   if(!pedidos.length){toast(t('toast_no_ped_env'));return;}
   const totalG=pedidos.reduce((s,p)=>s+p.total,0);const lbl=labelRango(desde,hasta);
   const porFecha={};pedidos.forEach(p=>{if(!porFecha[p.fecha])porFecha[p.fecha]=[];porFecha[p.fecha].push(p);});
-  let msg='MEXITAN - HISTORIAL\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
+  let msg='SISTEMA POS - HISTORIAL\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
   Object.keys(porFecha).sort().forEach(f=>{
     const arr=porFecha[f];const tF=arr.reduce((s,p)=>s+p.total,0);
     msg+=f+'  ('+arr.length+' pedidos - $'+tF+')\n'+'-'.repeat(44)+'\n';
@@ -1666,7 +1668,7 @@ async function emailHistorial(){
     });
   });
   msg+='='.repeat(44)+'\nTOTAL: $'+totalG+' | Pedidos: '+pedidos.length+' | Ticket: $'+Math.round(totalG/pedidos.length);
-  abrirEmailModal('Enviar Historial','Mexitan - Historial '+lbl+' ($'+totalG+')',msg);
+  abrirEmailModal('Enviar Historial','Sistema POS - Historial '+lbl+' ($'+totalG+')',msg);
 }
 async function emailResumen(){
   const desde=$('rdesde').value,hasta=$('rhasta').value;
@@ -1685,12 +1687,12 @@ async function emailResumen(){
     if(!pr[n])pr[n]={precio:v.precio,qty:0,total:0};pr[n].qty+=v.qty;pr[n].total+=v.precio*v.qty;
   }));
   const so=Object.entries(pr).sort((a,b)=>b[1].qty-a[1].qty);const lbl=labelRango(desde,hasta);
-  let msg='MEXITAN - RESUMEN\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
+  let msg='SISTEMA POS - RESUMEN\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
   msg+='Ventas Totales:    $'+td+'\nPedidos:           '+pedidos.length+'\nCaja (Efvo+Abonos):$'+(tEfectivo + tAbonos)+'\nGastos (Egresos):  -$'+tGastos+'\nVentas Tarjeta:    $'+tTarjeta+'\nVentas A Cuenta:   $'+tCuenta+'\nProductos Dist.:   '+so.length+'\n\n';
   msg+='-'.repeat(44)+'\nPRODUCTOS (mayor a menor)\n'+'-'.repeat(44)+'\n';
   so.forEach(([n,v])=>{msg+=n.substring(0,28).padEnd(30)+' x'+String(v.qty).padStart(3)+'  $'+v.total+'\n';});
   msg+='='.repeat(44)+'\nTOTAL VENTAS: $'+td;
-  abrirEmailModal('Enviar Resumen','Mexitan - Resumen '+lbl+' ($'+td+')',msg);
+  abrirEmailModal('Enviar Resumen','Sistema POS - Resumen '+lbl+' ($'+td+')',msg);
 }
 
 // ═══════════════════════
@@ -1869,6 +1871,121 @@ async function verificarLicencia(){
     // Empujar contenido hacia abajo para no tapar nada
     document.body.style.paddingTop='37px';
   }
+}
+
+// ═══════════════════════
+// TOUR
+// ═══════════════════════
+const TOUR_STEPS=[
+  {target:null,      title:'¡Bienvenido al Sistema POS!', desc:'Te mostramos en 6 pasos las secciones principales del sistema. Puedes repetir este tour cuando quieras con el botón <strong>?</strong>.'},
+  {target:'#tourMesas',  title:'Panel de Mesas',  desc:'Aquí ves todas las mesas activas. Usa <strong>+ Nueva mesa</strong> para abrir una y empezar a tomar pedidos.'},
+  {target:'#tourBtnMesa',title:'Crear una mesa',  desc:'Cada vez que llega un cliente presiona este botón. Puedes nombrarla con el nombre del cliente o el número de mesa.'},
+  {target:'#tourMenu',   title:'Menú',            desc:'Selecciona los platillos o bebidas que pide el cliente. Se agregan automáticamente al pedido de la mesa activa.'},
+  {target:'#tourOrden',  title:'Orden actual',    desc:'Aquí ves lo que lleva la mesa seleccionada. Puedes editar cantidades, quitar ítems y cobrar cuando el cliente pida la cuenta.'},
+  {target:'button[data-tab="h"]', title:'Historial de ventas', desc:'Consulta todas las ventas pasadas por fecha. Puedes exportar a CSV o enviarlo por correo.'},
+  {target:'button[data-tab="c"]', title:'Configuración',       desc:'Desde aquí personalizas el menú, el perfil del negocio, el idioma y más. ¡Empieza por agregar tus platillos!'},
+];
+
+let tourIdx=0;
+let tourSpot=null, tourBox=null;
+
+function tourStart(){
+  // Asegurarse de estar en la vista de pedidos
+  const tabP=document.querySelector('button[data-tab="p"]');
+  if(tabP) swTab(tabP);
+  tourIdx=0;
+  if(!tourSpot){
+    tourSpot=document.createElement('div');
+    tourSpot.id='tourSpot';
+    tourSpot.style.cssText='position:fixed;z-index:9700;border-radius:10px;pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 3px #c9a84c;';
+    document.body.appendChild(tourSpot);
+  }
+  if(!tourBox){
+    tourBox=document.createElement('div');
+    tourBox.id='tourBox';
+    tourBox.style.cssText='position:fixed;z-index:9800;background:#1a1a1a;border:1px solid #c9a84c;border-radius:14px;padding:20px 22px;max-width:320px;width:90vw;box-shadow:0 8px 32px rgba(0,0,0,.6);font-family:sans-serif;transition:opacity .25s;';
+    tourBox.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span id="tourStepLbl" style="font-size:.75rem;color:#c9a84c;font-weight:600;letter-spacing:.05em"></span>
+        <button onclick="tourEnd()" style="background:none;border:none;color:#6b7280;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>
+      </div>
+      <h3 id="tourTitle" style="color:#f0ece4;font-size:1.05rem;margin:0 0 8px"></h3>
+      <p id="tourDesc" style="color:#a09890;font-size:.875rem;line-height:1.55;margin:0 0 18px"></p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <button id="tourSkipBtn" onclick="tourEnd()" style="background:none;border:none;color:#6b7280;cursor:pointer;font-size:.8rem;text-decoration:underline">Omitir tour</button>
+        <div style="display:flex;gap:8px">
+          <button id="tourPrevBtn" onclick="tourPrev()" style="padding:7px 16px;border:1px solid #3a3a3a;background:none;color:#a09890;border-radius:8px;cursor:pointer;font-size:.85rem">Anterior</button>
+          <button id="tourNextBtn" onclick="tourNext()" style="padding:7px 18px;background:#c9a84c;border:none;color:#0d0d0d;border-radius:8px;cursor:pointer;font-weight:700;font-size:.85rem">Siguiente</button>
+        </div>
+      </div>`;
+    document.body.appendChild(tourBox);
+  }
+  tourSpot.style.display='block';
+  tourBox.style.display='block';
+  tourRender();
+}
+
+function tourRender(){
+  const step=TOUR_STEPS[tourIdx];
+  const total=TOUR_STEPS.length;
+  document.getElementById('tourStepLbl').textContent=`Paso ${tourIdx+1} de ${total}`;
+  document.getElementById('tourTitle').textContent=step.title;
+  document.getElementById('tourDesc').innerHTML=step.desc;
+  document.getElementById('tourPrevBtn').style.display=tourIdx===0?'none':'';
+  document.getElementById('tourSkipBtn').style.display=tourIdx===total-1?'none':'block';
+  const nextBtn=document.getElementById('tourNextBtn');
+  nextBtn.textContent=tourIdx===total-1?'¡Listo!':'Siguiente';
+
+  if(!step.target){
+    // Centered, no spotlight
+    tourSpot.style.cssText+='opacity:0;';
+    tourSpot.style.width='0'; tourSpot.style.height='0';
+    tourSpot.style.top='50%'; tourSpot.style.left='50%';
+    tourBox.style.top='50%'; tourBox.style.left='50%';
+    tourBox.style.transform='translate(-50%,-50%)';
+  } else {
+    const el=document.querySelector(step.target);
+    if(!el){ tourNext(); return; }
+    el.scrollIntoView({block:'center',behavior:'smooth'});
+    setTimeout(()=>{
+      const r=el.getBoundingClientRect();
+      const pad=8;
+      tourSpot.style.cssText=`position:fixed;z-index:9700;border-radius:10px;pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 3px #c9a84c;top:${r.top-pad}px;left:${r.left-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px;display:block;`;
+      positionTooltip(r);
+    },100);
+  }
+}
+
+function positionTooltip(r){
+  const bw=tourBox.offsetWidth||300, bh=tourBox.offsetHeight||180;
+  const vw=window.innerWidth, vh=window.innerHeight;
+  let top, left;
+  // Try below
+  if(r.bottom+bh+20<vh){ top=r.bottom+16; }
+  // Try above
+  else if(r.top-bh-20>0){ top=r.top-bh-16; }
+  else { top=Math.max(8, vh/2-bh/2); }
+  left=Math.max(8, Math.min(r.left, vw-bw-8));
+  tourBox.style.transform='none';
+  tourBox.style.top=top+'px';
+  tourBox.style.left=left+'px';
+}
+
+function tourNext(){
+  if(tourIdx>=TOUR_STEPS.length-1){ tourEnd(); return; }
+  tourIdx++;
+  tourRender();
+}
+function tourPrev(){ if(tourIdx>0){ tourIdx--; tourRender(); } }
+function tourEnd(){
+  if(tourSpot) tourSpot.style.display='none';
+  if(tourBox)  tourBox.style.display='none';
+  localStorage.setItem('pos_tour_done','1');
+}
+
+// Auto-arrancar el tour la primera vez que se loguea
+function tourAutoStart(){
+  if(!localStorage.getItem('pos_tour_done')) setTimeout(tourStart, 800);
 }
 
 // ═══════════════════════
