@@ -6,7 +6,6 @@ const https = require("https");
 admin.initializeApp();
 
 // --- DEFINICIÓN DE SECRETOS (CAJA FUERTE) ---
-const GEMINI_API_KEY = defineSecret("GEMINI_API_KEY");
 const MP_ACCESS_TOKEN = defineSecret("MP_ACCESS_TOKEN");
 
 function mpRequest(method, path, token, body = null) {
@@ -64,27 +63,4 @@ exports.webhookMP = onRequest(async (req, res) => {
     });
   }
   return res.status(200).send("OK");
-});
-
-
-// --- PROXY DE SEGURIDAD PARA GEMINI ---
-exports.callGeminiProxy = onRequest({ secrets: [GEMINI_API_KEY], cors: true }, async (req, res) => {
-  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
-  const { contents, model = "gemini-1.5-flash", systemInstruction } = req.body;
-
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY.value()}`;
-    const fetch = require("node-fetch");
-    const body = { contents };
-    if (systemInstruction) body.systemInstruction = { parts: [{ text: systemInstruction }] };
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-    const data = await response.json();
-    return res.status(200).json(data);
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
-  }
 });

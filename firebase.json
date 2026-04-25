@@ -25,7 +25,6 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      { "source": "/api/callGeminiProxy", "function": "callGeminiProxy", "region": "us-central1" },
       { "source": "/dashboard", "destination": "/dashboard.html" }
     ]
   },
