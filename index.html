@@ -437,7 +437,7 @@ const DEMO_MINS    = 10080; // 7 días
 const DemoStore = {
   load(){ return JSON.parse(localStorage.getItem(DEMO_DB_KEY)||'{}'); },
   save(d){ localStorage.setItem(DEMO_DB_KEY, JSON.stringify(d)); },
-  clear(){ localStorage.removeItem(DEMO_DB_KEY); localStorage.removeItem(DEMO_T_KEY); },
+  clear(){ localStorage.removeItem(DEMO_DB_KEY); localStorage.removeItem(DEMO_T_KEY); localStorage.removeItem('pos_demo_menu'); },
   getCol(n){ const d=this.load(); return d[n]||{}; },
   setCol(n,c){ const d=this.load(); d[n]=c; this.save(d); }
 };
@@ -1477,12 +1477,12 @@ function debounceSyncMesa(id){
 // ═══════════════════════
 async function loadMenu(){
   try{
-    const doc=await db.collection('config').doc('menu').get();
-    menuData=doc.exists?doc.data().categorias:JSON.parse(JSON.stringify(MENU_DEFAULT));
+    const raw=localStorage.getItem('pos_demo_menu');
+    menuData=raw?JSON.parse(raw):JSON.parse(JSON.stringify(MENU_DEFAULT));
   }catch(e){menuData=JSON.parse(JSON.stringify(MENU_DEFAULT));}
 }
 async function saveMenu(){
-  await db.collection('config').doc('menu').set({categorias:menuData});
+  localStorage.setItem('pos_demo_menu',JSON.stringify(menuData));
 }
 function buildMenu(){
   const nav=$('catnav'),cont=$('mcont');nav.innerHTML='';cont.innerHTML='';
