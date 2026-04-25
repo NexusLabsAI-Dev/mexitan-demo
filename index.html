@@ -52,6 +52,12 @@
       <label>Confirmar contraseña</label>
       <input type="password" id="loginPassConf2" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAction()" />
     </div>
+    <div id="demoCredBox" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:.7rem 1rem;margin-bottom:.5rem;font-size:.8rem;line-height:1.8;color:#c9a84c">
+      <strong>Acceso demo:</strong><br>
+      📧 demo@sistemapos.com<br>
+      🔑 Demo123
+      <button onclick="usarDemo()" style="display:block;width:100%;margin-top:.5rem;padding:.4rem;background:#c9a84c;border:none;border-radius:6px;color:#0d0d0d;font-weight:700;font-size:.8rem;cursor:pointer">Usar cuenta demo</button>
+    </div>
     <div class="loginErr" id="loginErr"></div>
     <button class="loginBtn" id="loginBtn" onclick="loginAction()">Entrar</button>
     <div style="text-align:center;margin-top:.75rem;font-size:.82rem;color:#8a8279">
@@ -611,10 +617,16 @@ function toggleLoginMode(){
   document.getElementById('loginBtn').textContent = _regMode ? 'Crear cuenta' : 'Entrar';
   document.getElementById('loginToggleMsg').textContent = _regMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
   document.getElementById('loginToggleBtn').textContent = _regMode ? 'Inicia sesión' : 'Crear cuenta';
+  document.getElementById('demoCredBox').style.display = _regMode ? 'none' : '';
   document.getElementById('loginErr').textContent = '';
 }
 function loginAction(){
   _regMode ? doRegister() : doLogin();
+}
+function usarDemo(){
+  document.getElementById('loginEmail').value='demo@sistemapos.com';
+  document.getElementById('loginPass').value='Demo123';
+  doLogin();
 }
 async function doRegister(){
   const email = document.getElementById('loginEmail').value.trim();
