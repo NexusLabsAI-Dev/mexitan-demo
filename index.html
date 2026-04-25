@@ -39,17 +39,25 @@
     <div class="loginLogo">
       <div style="font-size:2.2rem;font-weight:800;letter-spacing:-.02em;color:#c9a84c;font-family:'Barlow Condensed',sans-serif">POS</div>
     </div>
-    <div class="loginTitle">Sistema de Pedidos</div>
+    <div class="loginTitle" id="loginTitle">Sistema de Pedidos</div>
     <div class="loginField">
       <label>Correo</label>
       <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="username" />
     </div>
     <div class="loginField">
       <label>Contraseña</label>
-      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" />
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginAction()" />
+    </div>
+    <div id="loginPassConf" class="loginField" style="display:none">
+      <label>Confirmar contraseña</label>
+      <input type="password" id="loginPassConf2" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAction()" />
     </div>
     <div class="loginErr" id="loginErr"></div>
-    <button class="loginBtn" id="loginBtn" onclick="doLogin()">Entrar</button>
+    <button class="loginBtn" id="loginBtn" onclick="loginAction()">Entrar</button>
+    <div style="text-align:center;margin-top:.75rem;font-size:.82rem;color:#8a8279">
+      <span id="loginToggleMsg">¿No tienes cuenta?</span>
+      <button id="loginToggleBtn" onclick="toggleLoginMode()" style="background:none;border:none;color:#c9a84c;cursor:pointer;font-size:.82rem;font-weight:600;text-decoration:underline;padding:0 4px">Crear cuenta</button>
+    </div>
   </div>
 </div>
 
@@ -68,6 +76,7 @@
       <button class="tbtn" data-tab="b" onclick="swTab(this)" data-i18n="tab_compras">Compras</button>
       <button class="tbtn" data-tab="c" onclick="swTab(this)">⚙ Config</button>
     </div>
+    <span id="demoTimer" style="display:none;font-size:.75rem;color:#f59e0b;font-weight:600;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:4px;padding:.28rem .6rem;white-space:nowrap"></span>
     <button id="tourBtn" onclick="tourStart()" title="Tour del sistema" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:var(--b);border-radius:4px;padding:.28rem .65rem;font-size:.82rem;cursor:pointer;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">?</button>
     <button id="langBtn" onclick="toggleLang()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:var(--b);border-radius:4px;padding:.28rem .65rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;cursor:pointer;transition:all .15s" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">EN</button>
   </div>
@@ -410,6 +419,218 @@ firebase.initializeApp({
 const db=firebase.firestore();
 emailjs.init({publicKey:'Ke33C7iKHDtnhqGKN'});
 
+// ═══════════════════════════════════════════
+// DEMO MODE — localStorage proxy + session timer
+// ═══════════════════════════════════════════
+const DEMO_COLS = new Set(['mesas','pedidos','cuentas','movimientos_cuenta','gastos','lista_compras','actividad']);
+const DEMO_DB_KEY  = 'pos_demo_db';
+const DEMO_T_KEY   = 'pos_demo_start';
+const DEMO_MINS    = 30;
+
+// ── Storage helpers ──
+const DemoStore = {
+  load(){ return JSON.parse(localStorage.getItem(DEMO_DB_KEY)||'{}'); },
+  save(d){ localStorage.setItem(DEMO_DB_KEY, JSON.stringify(d)); },
+  clear(){ localStorage.removeItem(DEMO_DB_KEY); localStorage.removeItem(DEMO_T_KEY); },
+  getCol(n){ const d=this.load(); return d[n]||{}; },
+  setCol(n,c){ const d=this.load(); d[n]=c; this.save(d); }
+};
+
+// ── Query engine ──
+let _demoListeners = {};   // colName → [{filters,orderBy,cb}]
+let _demoIdCtr = 0;
+
+function _isDeleteSentinel(v){
+  return v && typeof v === 'object' && typeof v._methodName === 'string' && v._methodName.toLowerCase().includes('delete');
+}
+function _applyFilters(docs, filters){
+  return docs.filter(d => filters.every(f => {
+    const v = d.data()[f.field];
+    if(f.op==='==') return v===f.value;
+    if(f.op==='>=') return v>=f.value;
+    if(f.op==='<=') return v<=f.value;
+    return true;
+  }));
+}
+function _applyOrder(docs, ob){
+  if(!ob) return docs;
+  return [...docs].sort((a,b)=>{
+    const av=a.data()[ob.field], bv=b.data()[ob.field];
+    const c = av<bv?-1:av>bv?1:0;
+    return ob.dir==='desc'?-c:c;
+  });
+}
+function _makeSnap(colName, filters=[], ob=null){
+  const col = DemoStore.getCol(colName);
+  let docs = Object.entries(col).map(([id,data])=>({
+    id, data:()=>({...data}),
+    ref:{ update:d=>_demoUpdate(colName,id,d), delete:()=>_demoDelete(colName,id) }
+  }));
+  docs = _applyFilters(docs, filters);
+  docs = _applyOrder(docs, ob);
+  return { docs, empty: docs.length===0 };
+}
+function _demoNotify(colName){
+  (_demoListeners[colName]||[]).forEach(({filters,ob,cb})=>cb(_makeSnap(colName,filters,ob)));
+}
+function _demoUpdate(colName, id, data){
+  const col = DemoStore.getCol(colName);
+  if(col[id]){
+    Object.entries(data).forEach(([k,v])=>{
+      _isDeleteSentinel(v) ? delete col[id][k] : col[id][k]=v;
+    });
+    DemoStore.setCol(colName,col); _demoNotify(colName);
+  }
+  return Promise.resolve();
+}
+function _demoDelete(colName, id){
+  const col = DemoStore.getCol(colName);
+  delete col[id];
+  DemoStore.setCol(colName,col); _demoNotify(colName);
+  return Promise.resolve();
+}
+
+function demoCollection(colName, filters=[], ob=null){
+  return {
+    where(field,op,value){ return demoCollection(colName,[...filters,{field,op,value}],ob); },
+    orderBy(field,dir='asc'){ return demoCollection(colName,filters,{field,dir}); },
+    onSnapshot(cb){
+      if(!_demoListeners[colName]) _demoListeners[colName]=[];
+      const entry={filters,ob,cb};
+      _demoListeners[colName].push(entry);
+      setTimeout(()=>cb(_makeSnap(colName,filters,ob)),0);
+      return ()=>{ _demoListeners[colName]=(_demoListeners[colName]||[]).filter(e=>e!==entry); };
+    },
+    async add(data){
+      const id='d_'+Date.now()+'_'+(++_demoIdCtr);
+      const col=DemoStore.getCol(colName);
+      col[id]={...data};
+      DemoStore.setCol(colName,col); _demoNotify(colName);
+      return {id};
+    },
+    doc(id){
+      return {
+        update: d => _demoUpdate(colName,id,d),
+        delete: ()=> _demoDelete(colName,id),
+        async get(){
+          const col=DemoStore.getCol(colName);
+          const data=col[id];
+          return {exists:!!data, data:()=>data?{...data}:null, id};
+        },
+        async set(data){
+          const col=DemoStore.getCol(colName);
+          col[id]={...data};
+          DemoStore.setCol(colName,col); _demoNotify(colName);
+        }
+      };
+    },
+    async get(){ return _makeSnap(colName,filters,ob); }
+  };
+}
+
+// ── Config proxy (menu→local, licencia→real Firestore) ──
+function demoConfigCollection(){
+  return {
+    doc(docId){
+      if(docId==='licencia') return firebase.firestore().collection('config').doc('licencia');
+      return {
+        async get(){
+          const c=DemoStore.getCol('_cfg');
+          const d=c[docId];
+          return {exists:!!d, data:()=>d?{...d}:null, id:docId};
+        },
+        async set(data){
+          const c=DemoStore.getCol('_cfg');
+          c[docId]={...data};
+          DemoStore.setCol('_cfg',c);
+        },
+        async update(data){
+          const c=DemoStore.getCol('_cfg');
+          if(c[docId]) Object.assign(c[docId],data);
+          DemoStore.setCol('_cfg',c);
+        }
+      };
+    }
+  };
+}
+
+// ── Batch proxy ──
+function demoBatch(){
+  const ops=[];
+  return {
+    delete(ref){ ops.push({t:'d',ref}); },
+    update(ref,data){ ops.push({t:'u',ref,data}); },
+    async commit(){ for(const o of ops){ o.t==='d'?await o.ref.delete():await o.ref.update(o.data); } }
+  };
+}
+
+// ── Intercept db.collection and db.batch ──
+const _origCollection = db.collection.bind(db);
+db.collection = name => {
+  if(DEMO_COLS.has(name)) return demoCollection(name);
+  if(name==='config') return demoConfigCollection();
+  return _origCollection(name);
+};
+db.batch = demoBatch;
+
+// ── Session timer ──
+let _timerInterval = null;
+function demoTimerStart(){
+  if(!localStorage.getItem(DEMO_T_KEY)) localStorage.setItem(DEMO_T_KEY, Date.now().toString());
+  clearInterval(_timerInterval);
+  _timerInterval = setInterval(_timerTick, 1000);
+  _timerTick();
+}
+function _timerTick(){
+  const start = parseInt(localStorage.getItem(DEMO_T_KEY)||Date.now());
+  const remaining = DEMO_MINS*60*1000 - (Date.now()-start);
+  const badge = document.getElementById('demoTimer');
+  if(remaining<=0){
+    clearInterval(_timerInterval);
+    if(badge) badge.textContent='⏱ Sesión expirada';
+    DemoStore.clear();
+    setTimeout(()=>firebase.auth().signOut(), 1500);
+    return;
+  }
+  const m=Math.floor(remaining/60000);
+  const s=Math.floor((remaining%60000)/1000);
+  if(badge){ badge.style.display=''; badge.textContent=`⏱ Demo ${m}:${s.toString().padStart(2,'0')}`; }
+}
+
+// ── Login mode toggle ──
+let _regMode = false;
+function toggleLoginMode(){
+  _regMode = !_regMode;
+  document.getElementById('loginTitle').textContent = _regMode ? 'Crear cuenta' : 'Sistema de Pedidos';
+  document.getElementById('loginPassConf').style.display = _regMode ? '' : 'none';
+  document.getElementById('loginBtn').textContent = _regMode ? 'Crear cuenta' : 'Entrar';
+  document.getElementById('loginToggleMsg').textContent = _regMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
+  document.getElementById('loginToggleBtn').textContent = _regMode ? 'Inicia sesión' : 'Crear cuenta';
+  document.getElementById('loginErr').textContent = '';
+}
+function loginAction(){
+  _regMode ? doRegister() : doLogin();
+}
+async function doRegister(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const pass2 = document.getElementById('loginPassConf2').value;
+  const err   = document.getElementById('loginErr');
+  const btn   = document.getElementById('loginBtn');
+  if(!email||!pass){ err.textContent='Completa todos los campos.'; return; }
+  if(pass.length<6){ err.textContent='La contraseña debe tener al menos 6 caracteres.'; return; }
+  if(pass!==pass2){ err.textContent='Las contraseñas no coinciden.'; return; }
+  err.textContent=''; btn.disabled=true; btn.textContent='Creando cuenta...';
+  try{
+    await firebase.auth().createUserWithEmailAndPassword(email, pass);
+  }catch(e){
+    let msg = 'Error al crear cuenta.';
+    if(e.code==='auth/email-already-in-use') msg='Este correo ya tiene una cuenta. Inicia sesión.';
+    if(e.code==='auth/invalid-email') msg='Correo inválido.';
+    err.textContent=msg; btn.disabled=false; btn.textContent='Crear cuenta';
+  }
+}
+
 // ═══════════════════════
 // IDIOMA (ES / EN)
 // ═══════════════════════
@@ -742,7 +963,12 @@ function toggleLang(){
 // ═══════════════════════
 // MENÚ DEFAULT
 // ═══════════════════════
-const MENU_DEFAULT=[];
+const MENU_DEFAULT=[
+  {cat:'Entradas',items:[{n:'Nachos con queso',p:65},{n:'Alitas BBQ (6 pzas)',p:95},{n:'Ensalada César',p:75},{n:'Dedos de queso',p:70},{n:'Papas a la francesa',p:45}]},
+  {cat:'Platillos',items:[{n:'Hamburguesa Clásica',p:110},{n:'Hamburguesa Doble',p:135},{n:'Pasta Alfredo',p:105},{n:'Tacos de Pollo (3)',p:85},{n:'Enchiladas Verdes',p:80},{n:'Filete de Res',p:185},{n:'Pollo a la Plancha',p:120},{n:'Quesadillas (2)',p:70}]},
+  {cat:'Postres',items:[{n:'Pastel de Chocolate',p:55},{n:'Helado 2 bolas',p:45},{n:'Flan Napolitano',p:40},{n:'Brownie c/helado',p:60}]},
+  {cat:'Bebidas',items:[{n:'Refresco',p:25},{n:'Agua Natural',p:15},{n:'Agua de Sabor',p:25},{n:'Café Americano',p:35},{n:'Cappuccino',p:45},{n:'Cerveza',p:45},{n:'Jugo de Naranja',p:35},{n:'Licuado',p:40},{n:'Michelada',p:65}]},
+];
 
 // ═══════════════════════
 // BÚSQUEDA DE MENÚ
@@ -831,6 +1057,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
       $('loginScreen').style.display='none';
       const cfgU=$('cfgUserEmail');if(cfgU)cfgU.textContent=user.email||'';
       await verificarLicencia();
+      demoTimerStart();
       tourAutoStart();
       if(!menuData.length){ await loadMenu(); buildMenu(); }
     } else {
@@ -838,6 +1065,11 @@ document.addEventListener('DOMContentLoaded',async()=>{
       $('licenciaBloqueo').style.display='none';
       $('trialBanner').style.display='none';
       document.body.style.paddingTop='';
+      clearInterval(_timerInterval);
+      const badge=document.getElementById('demoTimer');
+      if(badge) badge.style.display='none';
+      // Reset login form to login mode
+      if(_regMode){ _regMode=false; toggleLoginMode(); }
     }
   });
 
@@ -872,6 +1104,7 @@ async function doLogin(){
   if(!email||!pass){err.textContent=t('login_campos');return;}
   err.textContent='';btn.disabled=true;btn.textContent=t('login_entrando');
   try{
+    DemoStore.clear(); // sesión demo siempre empieza limpia
     await firebase.auth().signInWithEmailAndPassword(email,pass);
   }catch(e){
     let msg=t('login_error');
