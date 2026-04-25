@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صارف دستی - Mexitán POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --v: #1e9438; --vo: #166a28; --vl: #e8f5ec; --n: #e8521c; --b: #ffffff; --t: #1a1a1a; --s: #6b7a6b; --bd: #cdd5cd;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Noto Nastaliq Urdu', 'Barlow', serif;
+            line-height: 2.2;
+            color: var(--t);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fdfdfd;
+            direction: rtl;
+        }
+        header {
+            text-align: center;
+            border-bottom: 4px solid var(--n);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .logo { max-height: 80px; margin-bottom: 1rem; }
+        h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--vo);
+            text-transform: uppercase;
+            font-size: 2.2rem;
+            margin: 0;
+        }
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--n);
+            border-right: 5px solid var(--vo);
+            padding-right: 1rem;
+            margin-top: 2.5rem;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+        }
+        h3 { color: var(--vo); margin-top: 1.5rem; }
+        code {
+            background: #eee;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            background: var(--vo);
+            color: var(--b);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+            margin-left: 0.5rem;
+        }
+        .tip {
+            background: var(--vl);
+            border-right: 4px solid var(--v);
+            padding: .85rem 1rem;
+            margin: 1.2rem 0;
+            color: var(--vo);
+            border-radius: 6px 0 0 6px;
+        }
+        .warn {
+            background: #fff8f0;
+            border-right: 4px solid var(--n);
+            padding: .85rem 1rem;
+            margin: 1.2rem 0;
+            color: #7a3010;
+            border-radius: 6px 0 0 6px;
+        }
+        ul li { margin-bottom: .4rem; }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--s);
+            border-top: 1px solid var(--bd);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="Logo.png" alt="Mexitán Logo" class="logo">
+        <h1>صارف دستی</h1>
+        <p style="color: var(--s); font-weight: 600;">پوائنٹ آف سیل (POS) سسٹم — Mexitán Food &amp; Drink</p>
+    </header>
+
+    <section>
+        <h2>۱. تعارف</h2>
+        <p><strong>Mexitán POS</strong> سسٹم میں خوش آمدید۔ یہ ایپلی کیشن کسی بھی فون سے کاروبار کے آرڈرز کو سنبھالنے کے لیے بنائی گئی ہے۔ اس سے میزوں کا انتظام، آرڈرز لینا، بل وصول کرنا، ٹکٹ پرنٹ کرنا اور رپورٹس تیار کرنا ممکن ہے۔</p>
+        <p>سسٹم <strong>اردو، ہسپانوی اور انگریزی</strong> میں دستیاب ہے۔ زبان تبدیل کرنے کے لیے اوپر دائیں کونے میں <strong>EN / ES</strong> بٹن استعمال کریں۔</p>
+    </section>
+
+    <section>
+        <h2>۲. لاگ ان</h2>
+        <div class="step">
+            <div class="step-num">۱</div>
+            <p>خوش آمدید اسکرین پر اپنا مجاز ای میل اور پاس ورڈ درج کریں۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۲</div>
+            <p><strong>Sign In</strong> پر ٹیپ کریں۔ اگر معلومات درست ہیں تو آرڈرز کے مین ڈیش بورڈ پر پہنچ جائیں گے۔</p>
+        </div>
+        <div class="tip">💡 صرف مجاز عملہ ہی لاگ ان کر سکتا ہے۔ پاس ورڈ بھول جانے کی صورت میں منتظم سے رابطہ کریں۔</div>
+    </section>
+
+    <section>
+        <h2>۳. موبائل نیویگیشن</h2>
+        <p>فون پر اسکرین تین پینلز میں تقسیم ہوتی ہے جن تک نچلی نیویگیشن بار سے رسائی ملتی ہے:</p>
+        <ul>
+            <li>🪑 <strong>Tables (میزیں)</strong> — کھلی میزوں کی فہرست</li>
+            <li>🍽 <strong>Menu (مینو)</strong> — آرڈر میں شامل کرنے کے لیے پروڈکٹ کیٹالاگ</li>
+            <li>🧾 <strong>Order (آرڈر)</strong> — موجودہ آرڈر کا خلاصہ اور بل کا بٹن</li>
+        </ul>
+        <p>نچلی بار History، Summary یا Settings میں جانے پر خود بخود چھپ جاتی ہے اور Orders پر واپس آنے پر دوبارہ ظاہر ہوتی ہے۔</p>
+    </section>
+
+    <section>
+        <h2>۴. میزوں کا انتظام</h2>
+        <h3>نئی میز کھولنا</h3>
+        <div class="step">
+            <div class="step-num">۱</div>
+            <p>میزوں کے پینل میں <strong>+ New Table</strong> بٹن پر ٹیپ کریں۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۲</div>
+            <p>میز کا نام یا نمبر درج کریں (یا تجویز منتخب کریں) اور تصدیق کریں۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۳</div>
+            <p>میز فہرست میں ظاہر ہو جاتی ہے۔ کھولنے پر سسٹم خود بخود ریکارڈ کرتا ہے کہ کون اسے سنبھال رہا ہے۔</p>
+        </div>
+
+        <h3>موجودہ میز منتخب کرنا</h3>
+        <p>فہرست میں کسی بھی میز پر ٹیپ کریں تاکہ اس کا موجودہ آرڈر دیکھ سکیں یا مزید اشیاء شامل کر سکیں۔</p>
+
+        <div class="warn">⚠️ اگر کوئی اور اس میز کو پہلے سے اپنے فون پر کھولے ہوئے ہے تو سسٹم خبردار کرے گا: <em>"[نام] اس آرڈر میں ترمیم کر رہا ہے۔ کیا آپ پھر بھی جاری رکھنا چاہتے ہیں؟"</em> ضرورت ہو تو جاری رکھ سکتے ہیں۔</div>
+
+        <h3>بل لیے بغیر میز بند کرنا</h3>
+        <p>میز کے نام کے ساتھ موجود <strong>✕</strong> پر ٹیپ کریں۔ اگر اس میں اشیاء ہیں تو سسٹم آرڈر حذف کرنے سے پہلے تصدیق مانگے گا۔</p>
+    </section>
+
+    <section>
+        <h2>۵. آرڈرز لینا</h2>
+        <div class="step">
+            <div class="step-num">۱</div>
+            <p>میز منتخب کرنے کے بعد <strong>Menu</strong> پینل پر جائیں۔ سرچ بار استعمال کریں یا کیٹیگریز دیکھیں۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۲</div>
+            <p>کسی پروڈکٹ پر ٹیپ کر کے اسے کھولیں۔ تصدیق سے پہلے خصوصی نوٹ شامل کر سکتے ہیں (مثلاً "پیاز کے بغیر")۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۳</div>
+            <p><strong>Order</strong> پینل میں <code>+</code> اور <code>−</code> بٹنوں سے تعداد ترتیب دیں، یا شامل شدہ پروڈکٹ کی ہدایات تبدیل کرنے کے لیے نوٹ آئیقون (📝) پر ٹیپ کریں۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۴</div>
+            <p>اختیاری طور پر آرڈر کے ٹیکسٹ فیلڈ میں گاہک کا نام لکھیں۔</p>
+        </div>
+        <div class="tip">💡 ٹریش آئیقون (🗑) آرڈر سے پروڈکٹ مکمل طور پر ہٹا دیتا ہے۔</div>
+    </section>
+
+    <section>
+        <h2>۶. بل اور ادائیگی</h2>
+        <div class="step">
+            <div class="step-num">۱</div>
+            <p>آرڈر پینل میں <strong>Charge</strong> بٹن پر ٹیپ کریں۔ یہ صرف اس وقت دستیاب ہوتا ہے جب کم از کم ایک آئٹم موجود ہو۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۲</div>
+            <p>ادائیگی کا طریقہ منتخب کریں: <strong>💵 نقد (Cash)</strong> یا <strong>💳 کارڈ (Card)</strong>۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۳</div>
+            <p>کارڈ سے ادائیگی کی صورت میں ٹپ منتخب کریں: <strong>0 / 5 / 10 / 15 / 20 %</strong> یا اپنی مرضی کی رقم درج کریں۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۴</div>
+            <p><strong>Confirm &amp; Save</strong> پر ٹیپ کریں۔ فروخت ریکارڈ ہو جائے گی، میز بند ہو گی اور ہسٹری خود بخود اپ ڈیٹ ہو گی۔</p>
+        </div>
+        <div class="step">
+            <div class="step-num">۵</div>
+            <p>اگر بلوٹوتھ پرنٹر منسلک ہے تو ٹکٹ پرنٹ کرنے کا آپشن ظاہر ہو گا۔</p>
+        </div>
+        <div class="tip">💡 سسٹم خود بخود ریکارڈ کرتا ہے کہ ہر آرڈر کا بل کس نے وصول کیا۔ یہ ہسٹری میں ہر فروخت کے ساتھ <em>(👤 نام)</em> کی صورت میں نظر آتا ہے۔</div>
+        <div class="warn">⚠️ ڈبل چارج سے بچنے کے لیے بٹن دبانے پر فوری لاک ہو جاتا ہے۔ کوئی خرابی آنے پر دوبارہ فعال ہو جاتا ہے۔</div>
+    </section>
+
+    <section>
+        <h2>۷. ہسٹری اور خلاصہ</h2>
+        <p>اوپر موجود ٹیبز <strong>History</strong> اور <strong>Daily Summary</strong> استعمال کریں:</p>
+        <ul>
+            <li><strong>History (ہسٹری):</strong> تاریخ کی مدت کے اندر تمام آرڈرز۔ ہر کارڈ پر میز، گاہک، وقت، ادائیگی کا طریقہ اور بل وصول کرنے والے کا نام <em>(👤 نام)</em> ظاہر ہوتا ہے۔ 🖨️ آئیقون پر ٹیپ کر کے کوئی بھی ٹکٹ دوبارہ پرنٹ کر سکتے ہیں۔</li>
+            <li><strong>Daily Summary (روزانہ کا خلاصہ):</strong> کل آمدنی، اوسط بل، ادائیگی کے طریقے کے مطابق تقسیم، ٹپس اور سب سے زیادہ فروخت ہونے والی مصنوعات کی درجہ بندی۔</li>
+            <li><strong>Export CSV:</strong> ڈیٹا ایکسل فارمیٹ میں ڈاؤن لوڈ کریں۔</li>
+            <li><strong>Send by email (ای میل):</strong> رپورٹ کو ⚙ Settings میں ترتیب دیے گئے ای میل پر بھیجیں۔</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>۸. ترتیبات ⚙️</h2>
+
+        <h3>رپورٹس میں آپ کا نام</h3>
+        <p><strong>"Your name in reports"</strong> فیلڈ میں اپنا نام درج کریں اور <strong>Save</strong> پر ٹیپ کریں۔ یہ نام ہسٹری میں ظاہر ہو گا تاکہ پتہ چلے کہ کس نے بل وصول کیا۔ <strong>ہر فرد کو اپنے فون پر یہ ترتیب دینا ضروری ہے۔</strong></p>
+
+        <h3>رپورٹ کا ای میل پتہ</h3>
+        <p>وہ ای میل پتہ درج کریں جہاں "Send by email" بٹن استعمال کرنے پر History اور Summary رپورٹس بھیجی جائیں گی۔</p>
+
+        <h3>بلوٹوتھ پرنٹر</h3>
+        <p><strong>Connect printer</strong> پر ٹیپ کریں اور فہرست سے اپنا بلوٹوتھ ڈیوائس منتخب کریں۔ ایک بار منسلک ہونے کے بعد سسٹم اسے یاد رکھتا ہے۔ ڈس کنیکٹ کرنے کے لیے <strong>Disconnect</strong> پر ٹیپ کریں۔</p>
+
+        <h3>مینو ایڈیٹر</h3>
+        <p>یہاں آپ مکمل کیٹالاگ کا انتظام کر سکتے ہیں:</p>
+        <ul>
+            <li><strong>+ New category</strong> — نئی سیکشن بنائیں (مثلاً "Desserts")۔</li>
+            <li><strong>Rename</strong> — کیٹیگری کا نام تبدیل کریں۔</li>
+            <li><strong>+ Item</strong> — اس کیٹیگری میں نام اور قیمت کے ساتھ پروڈکٹ شامل کریں۔</li>
+            <li><strong>Edit</strong> — موجودہ پروڈکٹ کا نام یا قیمت تبدیل کریں۔</li>
+            <li><strong>Delete</strong> — کیٹیگری (تمام پروڈکٹس سمیت) یا انفرادی آئٹم حذف کریں۔</li>
+        </ul>
+        <div class="tip">💡 مینو کی تمام تبدیلیاں تمام ڈیوائسز اور ویب سائٹ کے پبلک مینو پر خود بخود اپ ڈیٹ ہو جاتی ہیں۔</div>
+        <div class="warn">⚠️ اگر سسٹم کوئی تبدیلی محفوظ نہ کر سکے (مثلاً انٹرنیٹ نہ ہو) تو خود بخود پچھلی حالت میں واپس آ جاتا ہے تاکہ کوئی خرابی نہ ہو۔</div>
+    </section>
+
+    <footer>
+        &copy; 2026 Mexitán Food &amp; Drink. تمام جملہ حقوق محفوظ ہیں۔
+    </footer>
+</body>
+</html>

@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mexitán — Marketing & SEO Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Estilos Premium Dashboard - Glassmorphism */
+    :root {
+      --glass: rgba(255, 255, 255, 0.75);
+      --glass-dark: rgba(0, 0, 0, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.3);
+      --accent: #1e9438;
+      --accent-dark: #166a28;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f3f5f3 0%, #e8f5ec 100%);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dash-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      height: calc(100vh - 56px);
+    }
+
+    .sidebar-dash {
+      width: 280px;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      color: var(--s);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      margin-bottom: 0.5rem;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(30, 148, 56, 0.1);
+      color: var(--accent);
+    }
+
+    .nav-item.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(30, 148, 56, 0.3);
+    }
+
+    .main-content {
+      flex: 1;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--vo);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .dash-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid var(--bd);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .dash-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border-color: var(--accent);
+    }
+
+    .card-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--s);
+      letter-spacing: 0.1em;
+    }
+
+    .card-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--t);
+    }
+
+    .ai-btn {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 1.2rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.2s;
+    }
+
+    .ai-btn:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 15px rgba(30, 148, 56, 0.4);
+    }
+
+    .ai-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .content-preview {
+      background: #f9f9f9;
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: var(--vl);
+      color: var(--vo);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Ocultar secciones por defecto */
+    .dash-section {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .dash-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Scheduler Calendar */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: var(--bd);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .cal-day {
+      background: #fff;
+      min-height: 100px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .cal-day-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--s);
+    }
+
+    .cal-post {
+      background: var(--nl);
+      color: var(--n);
+      font-size: 0.65rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      border-left: 3px solid var(--n);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Vision Tool */
+    .drop-zone {
+      border: 2px dashed var(--bd);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      color: var(--s);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: var(--vl);
+      color: var(--vo);
+    }
+
+    .preview-img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 12px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    /* Canvas Editor */
+    #adCanvas {
+      max-width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--bd);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .dash-container {
+        flex-direction: column;
+        padding: 1rem;
+      }
+
+      .sidebar-dash {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0.8rem;
+      }
+
+      .nav-item {
+        margin-bottom: 0;
+        padding: 0.6rem 1rem;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <img src="Logo.png" alt="Mexitán" style="height:36px;width:auto;object-fit:contain" />
+      <div class="hlogo">Mexitán <span>Dashboard</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <button class="tbtn" onclick="window.location.href='index.html'">← Volver al POS</button>
+    </div>
+  </header>
+
+  <div class="dash-container">
+    <aside class="sidebar-dash">
+      <div class="nav-item active" onclick="swDash('overview', this)"><span>📊</span> Resumen General</div>
+      <div class="nav-item" onclick="swDash('marketing', this)"><span>✍️</span> Generador Smart</div>
+      <div class="nav-item" onclick="swDash('seo', this)"><span>🔍</span> SEO & Reseñas</div>
+      <div class="nav-item" onclick="swDash('vision', this)"><span>📸</span> Visión & Ads</div>
+      <div class="nav-item" onclick="swDash('scheduler', this)"><span>📅</span> Programador</div>
+      <div style="margin-top:auto; padding: 1rem 0;">
+        <div class="nav-item" onclick="swDash('settings', this)"><span>⚙️</span> Configuración AI</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- SECTION: OVERVIEW -->
+      <div id="sd-overview" class="dash-section active">
+        <h2 class="section-title">Análisis de Popularidad</h2>
+        <div class="card-grid">
+          <div class="dash-card">
+            <div class="card-label">Platillo Estrella</div>
+            <div class="card-value" id="topDishName">—</div>
+            <p class="mbody" id="topDishDesc">Cargando datos de ventas...</p>
+          </div>
+          <div class="dash-card">
+            <div class="card-label">Estado de Marketing</div>
+            <div class="card-value" style="color:var(--v)">Optimizado ✨</div>
+            <p class="mbody" id="mktStatus">La IA ha preparado sugerencias para tus platos estrella en la pestaña
+              "Generador".</p>
+          </div>
+          <div class="dash-card" style="border-top: 3px solid var(--n);">
+            <div class="card-label">Oportunidad de Venta</div>
+            <div class="card-value" id="promoIdea">Sugerencia AI</div>
+            <button class="ai-btn" style="margin-top:0.5rem" onclick="generatePromoIdea()">
+              ✨ Generar Idea
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+          <h3 class="bsec" style="margin-bottom: 1rem;">Top 5 Platillos más Vendidos</h3>
+          <div class="ptbl" id="topSellersList">
+            <div class="pthdr">
+              <div>Platillo</div>
+              <div style="text-align:center">Ventas</div>
+              <div style="text-align:right">Total</div>
+            </div>
+            <div class="emsg">Conectando con la base de datos...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: MARKETING (MODO AUTOPILOT) -->
+      <div id="sd-marketing" class="dash-section">
+        <h2 class="section-title">Asistente de Marketing Autopilot 🤖</h2>
+        <p class="mbody">La IA ha analizado tus ventas y preparado estas sugerencias para hoy. No necesitas saber de
+          marketing, solo revisa y aprueba.</p>
+
+        <div id="autopilotContainer"
+          style="display:grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top:1.5rem">
+          <!-- Generado automáticamente por la IA -->
+          <div class="emsg" id="autoMktMsg">Analizando tus platillos estrella para generar sugerencias...</div>
+        </div>
+
+        <div id="btnExportPosts" style="display:none; margin-top:1rem; gap:0.8rem; flex-wrap:wrap">
+          <button class="mcon" onclick="exportPosts('csv')">📥 Exportar CSV</button>
+          <button class="mcon" onclick="exportPosts('json')">📥 Exportar JSON</button>
+        </div>
+
+        <div
+          style="margin-top:2rem; padding:1.5rem; background:var(--vl); border-radius:16px; border:1px solid var(--accent)">
+          <h3 class="bsec" style="color:var(--accent-dark)">✨ ¿Quieres promocionar algo específico?</h3>
+          <div style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap; margin-top:1rem">
+            <div class="loginField" style="flex:1; min-width:200px; margin:0">
+              <label>Elige un platillo</label>
+              <select id="mktDish" class="nmin"></select>
+            </div>
+            <div class="loginField" style="flex:1; min-width:200px; margin:0">
+              <label>Tono</label>
+              <select id="mktTone" class="nmin">
+                <option value="creativo">Creativo</option>
+                <option value="elegante">Elegante</option>
+                <option value="promocional">Promocional</option>
+              </select>
+            </div>
+            <button class="ai-btn" id="btnGenMkt" onclick="generateMarketingContent()">✨ Generar Contenido con IA</button>
+          </div>
+          <div id="customMktResult" style="display:none; margin-top:1.5rem; display:flex; flex-direction:column; gap:1rem">
+            <div>
+              <h4 class="bsec" style="font-size:0.75rem; margin-bottom:0.4rem">Google Business</h4>
+              <div class="content-preview" id="prevGBP"></div>
+              <button class="mcon" style="font-size:0.7rem; padding:0.4rem; margin-top:0.4rem" onclick="navigator.clipboard.writeText(document.getElementById('prevGBP').textContent); toast('📋 Copiado para Google Business')">📋 Copiar para Google</button>
+            </div>
+            <div>
+              <h4 class="bsec" style="font-size:0.75rem; margin-bottom:0.4rem">Instagram / Facebook</h4>
+              <div class="content-preview" id="prevSocial"></div>
+              <button class="mcan" style="font-size:0.7rem; padding:0.4rem; margin-top:0.4rem" onclick="navigator.clipboard.writeText(document.getElementById('prevSocial').textContent); toast('📱 Copiado para Instagram')">📱 Copiar para Instagram</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: SEO -->
+      <div id="sd-seo" class="dash-section">
+        <h2 class="section-title">SEO Local & Reseñas</h2>
+
+        <div class="card-grid">
+          <div class="dash-card">
+            <div class="card-label">Palabras Clave de Proximidad</div>
+            <div id="seoKeywords">
+              <span class="tag">#ComidaMexicana</span>
+              <span class="tag">#CafeDeOlla</span>
+              <span class="tag">#ChilaquilesCerca</span>
+            </div>
+            <button class="ai-btn" onclick="analyzeSEO()">🔍 Analizar Keywords</button>
+          </div>
+
+        </div>
+
+        <div style="margin-top: 2rem;">
+          <h3 class="bsec" style="margin-bottom: 1rem;">Responder Reseñas Pendientes</h3>
+          <div id="reviewsList" style="display:flex; flex-direction:column; gap:1rem">
+            <div class="dash-card">
+              <div style="display:flex; justify-content:space-between">
+                <strong>María G.</strong>
+                <span style="color:var(--vo)">⭐⭐⭐⭐⭐</span>
+              </div>
+              <p class="mbody">"Los chilaquiles verdes están increíbles, pero el café tardó un poco."</p>
+              <div class="loginField">
+                <label>Respuesta sugerida por IA</label>
+                <textarea class="notasInput"
+                  id="reply1">¡Hola María! Muchas gracias por visitarnos. Nos alegra que te gustaran los chilaquiles. Lamentamos la demora con el café, estamos trabajando para que tu próxima experiencia sea perfecta.</textarea>
+              </div>
+              <button class="ai-btn" style="width:fit-content"
+                onclick="toast('Copiado al portapapeles. Pégalo en Google Business.')">Copiar Respuesta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: VISION -->
+      <div id="sd-vision" class="dash-section">
+        <h2 class="section-title">IA Visual & Ads</h2>
+
+        <div style="display:flex; gap: 2rem; flex-wrap:wrap">
+          <div class="dash-card" style="flex:1; min-width:320px">
+            <div class="card-label">Analizar Platillo</div>
+
+            <div class="loginField">
+              <label>Seleccionar del Menú</label>
+              <select id="visDish" class="nmin" onchange="loadDishImage()"></select>
+            </div>
+            <div style="text-align:center; margin: 0.5rem 0; font-weight:bold; font-size:0.7rem">O SUBE UNA NUEVA FOTO
+            </div>
+
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+              <input type="file" id="fileInput" hidden accept="image/*" onchange="handleFile(this.files[0])" />
+              <p>Arrastra una foto aquí o haz clic para subir</p>
+              <img id="imgPreview" class="preview-img" />
+            </div>
+            <div id="visionResults" style="display:none; margin-top:1rem">
+              <div class="card-label">Descripción Alt-Text (SEO)</div>
+              <div class="content-preview" id="altTextResult"></div>
+              <div class="card-label" style="margin-top:0.8rem">Etiquetas detectadas</div>
+              <div id="visionTags"></div>
+            </div>
+            <button class="ai-btn" id="btnAnalyzeImg" style="display:none; margin-top:1rem" onclick="analyzeImage()">
+              📸 Analizar con Gemini Vision
+            </button>
+            <button class="ai-btn" id="btnAdCopy" style="display:none; margin-top:0.5rem; background: var(--accent-dark)" onclick="generateAdCopy()">
+              ✍️ Generar Copy para Anuncio
+            </button>
+          </div>
+
+          <div class="dash-card" style="flex:1.2; min-width:320px">
+            <div class="card-label">Creador de Ads (Diseño IA)</div>
+            <div id="canvasWrap" style="position:relative; text-align:center">
+              <canvas id="adCanvas" width="500" height="500"></canvas>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:1rem">
+              <div class="loginField">
+                <label>Texto de Oferta</label>
+                <input type="text" id="adText" class="nmin" value="¡2x1 HOY!" oninput="drawAd()" />
+              </div>
+              <div class="loginField">
+                <label>Posición</label>
+                <select id="adPos" class="nmin" onchange="drawAd()">
+                  <option value="top">Superior</option>
+                  <option value="middle">Centro</option>
+                  <option value="bottom" selected>Inferior</option>
+                </select>
+              </div>
+            </div>
+            <button class="mcon" onclick="downloadAd()">📥 Descargar Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: SCHEDULER -->
+      <div id="sd-scheduler" class="dash-section">
+        <h2 class="section-title">Programador de Marketing</h2>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem">
+          <div style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap">
+            <div class="loginField" style="margin:0">
+              <label>Frecuencia de publicación</label>
+              <select id="schFreq" class="nmin" style="margin:0">
+                <option value="2">2 veces por semana</option>
+                <option value="3">3 veces por semana</option>
+                <option value="5">5 veces por semana</option>
+                <option value="7">Diario</option>
+              </select>
+            </div>
+            <button class="ai-btn" id="btnGenSchedule" onclick="generateSchedule()">✨ Auto-Programar Mes</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem">
+            <div class="bsec" id="calMonthYear"></div>
+            <div id="btnExportSchedule" style="display:none; gap:0.5rem; flex-wrap:wrap">
+              <button class="mcon" onclick="exportSchedule('csv')">📥 Exportar CSV</button>
+              <button class="mcon" onclick="exportSchedule('json')">📥 Exportar JSON</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leyenda de plataformas -->
+        <div style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap">
+          <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700">
+            <div style="width:10px;height:10px;border-radius:2px;background:var(--n)"></div> Instagram
+          </div>
+          <div style="display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700">
+            <div style="width:10px;height:10px;border-radius:2px;background:#4285f4"></div> Google Business
+          </div>
+          <div style="font-size:0.75rem; color:var(--s); margin-left:auto">Haz clic en cualquier post para ver el texto completo</div>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid"></div>
+
+        <!-- Panel de detalle del post -->
+        <div id="postDetailPanel" style="display:none; margin-top:1.5rem; background:#fff; border-radius:16px; padding:1.5rem; border:1px solid var(--bd); animation: fadeIn 0.3s ease-out">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem">
+            <div>
+              <div class="card-label" id="postDetailMeta"></div>
+            </div>
+            <button onclick="document.getElementById('postDetailPanel').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--s);line-height:1">✕</button>
+          </div>
+          <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start">
+            <img id="postDetailImg" style="display:none; width:140px; height:140px; object-fit:cover; border-radius:12px; border:1px solid var(--bd); flex-shrink:0" />
+            <div style="flex:1; min-width:200px">
+              <div class="content-preview" id="postDetailText" style="min-height:80px"></div>
+              <div id="postDetailImgNote" style="display:none; margin-top:0.5rem; font-size:0.75rem; color:var(--s)">
+                📎 Imagen del menú adjunta en la exportación
+              </div>
+            </div>
+          </div>
+          <button class="mcon" style="margin-top:1rem; width:fit-content" onclick="navigator.clipboard.writeText(document.getElementById('postDetailText').textContent); toast('📋 Texto copiado — pégalo en tu app de publicación')">📋 Copiar texto</button>
+        </div>
+      </div>
+
+      <!-- SECTION: SETTINGS -->
+      <div id="sd-settings" class="dash-section">
+        <h2 class="section-title">Perfil del Negocio</h2>
+        <p class="mbody" style="margin-bottom:1.5rem">Esta información se inyecta automáticamente en <strong>todos</strong> los prompts de IA. Sin esto, el contenido generado es genérico. Complétala una vez y la IA siempre hablará de Mexitán con datos reales.</p>
+
+        <div class="dash-card">
+          <div class="card-label">Datos Básicos</div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top:0.5rem">
+            <div class="loginField" style="margin:0">
+              <label>Nombre del negocio</label>
+              <input type="text" id="cfgNombre" class="nmin" placeholder="Mexitán" />
+            </div>
+            <div class="loginField" style="margin:0">
+              <label>Tipo de cocina</label>
+              <input type="text" id="cfgDescripcion" class="nmin" placeholder="Restaurante de comida mexicana tradicional" />
+            </div>
+            <div class="loginField" style="margin:0">
+              <label>Colonia / Barrio</label>
+              <input type="text" id="cfgColonia" class="nmin" placeholder="Col. Roma Norte" />
+            </div>
+            <div class="loginField" style="margin:0">
+              <label>Ciudad</label>
+              <input type="text" id="cfgCiudad" class="nmin" placeholder="Ciudad de México" />
+            </div>
+            <div class="loginField" style="margin:0">
+              <label>Horario de atención</label>
+              <input type="text" id="cfgHorario" class="nmin" placeholder="Lun–Sab 8am–9pm, Dom 9am–6pm" />
+            </div>
+            <div class="loginField" style="margin:0">
+              <label>Teléfono / WhatsApp</label>
+              <input type="text" id="cfgTelefono" class="nmin" placeholder="+52 55 1234 5678" />
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-card" style="margin-top:1rem">
+          <div class="card-label">Redes Sociales</div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top:0.5rem">
+            <div class="loginField" style="margin:0">
+              <label>Instagram</label>
+              <input type="text" id="cfgInstagram" class="nmin" placeholder="@mexitan" />
+            </div>
+            <div class="loginField" style="margin:0">
+              <label>Facebook</label>
+              <input type="text" id="cfgFacebook" class="nmin" placeholder="facebook.com/mexitan" />
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-card" style="margin-top:1rem">
+          <div class="card-label">Identidad del negocio (para que la IA hable con tu voz)</div>
+          <div class="loginField" style="margin-top:0.8rem">
+            <label>Especialidades destacadas</label>
+            <input type="text" id="cfgEspecialidades" class="nmin" placeholder="chilaquiles verdes, café de olla, tamales oaxaqueños, tostadas de tinga..." />
+          </div>
+          <div class="loginField">
+            <label>¿Qué te diferencia de otros restaurantes?</label>
+            <textarea id="cfgDiferenciador" class="notasInput" rows="3" placeholder="Recetas heredadas de la abuela, ingredientes de mercado local, atención familiar, 20 años en el barrio..."></textarea>
+          </div>
+          <div class="loginField">
+            <label>Palabras clave de ubicación (para SEO)</label>
+            <input type="text" id="cfgSeoZona" class="nmin" placeholder="cerca del metro, centro histórico, Roma Norte, Condesa..." />
+          </div>
+        </div>
+
+        <button class="ai-btn" style="margin-top:1.5rem; width:fit-content" onclick="saveBusinessProfile()">
+          💾 Guardar Perfil
+        </button>
+
+        <div class="dash-card" style="margin-top:1.5rem; border-left:3px solid var(--v)">
+          <div class="card-label">Estado de la IA</div>
+          <p class="mbody" style="color:var(--v)">✓ Sistema Blindado: Las claves de IA están protegidas en el servidor y no son visibles en el navegador.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPTS -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="ticket.js"></script>
+
+  <script>
+    // Firebase Init
+    firebase.initializeApp({
+      apiKey: "AIzaSyAutad3SdguTCvCoen3pRQNyBF5-NuY7Po",
+      authDomain: "mexitan-demo.firebaseapp.com",
+      projectId: "mexitan-demo",
+      storageBucket: "mexitan-demo.firebasestorage.app",
+      messagingSenderId: "561269173290",
+      appId: "1:561269173290:web:9c6e803982261a5a88a753"
+    });
+    const db = firebase.firestore();
+
+    // DASHBOARD STATE
+    let topProducts = [];
+    let menuItems = [];
+    let menuCats = [];
+    let negocioProfile = {};
+    let calendarData = []; // [{dia, plataforma, titulo, texto, fechaISO}]
+    // La clave de Gemini ya NO vive aquí — está protegida en el servidor (Firebase Secrets)
+
+    const PROFILE_FIELDS = [
+      { id: 'cfgNombre',        key: 'nombre' },
+      { id: 'cfgDescripcion',   key: 'descripcion' },
+      { id: 'cfgColonia',       key: 'colonia' },
+      { id: 'cfgCiudad',        key: 'ciudad' },
+      { id: 'cfgHorario',       key: 'horario' },
+      { id: 'cfgTelefono',      key: 'telefono' },
+      { id: 'cfgInstagram',     key: 'instagram' },
+      { id: 'cfgFacebook',      key: 'facebook' },
+      { id: 'cfgEspecialidades',key: 'especialidades' },
+      { id: 'cfgDiferenciador', key: 'diferenciador' },
+      { id: 'cfgSeoZona',       key: 'seoZona' },
+    ];
+
+    function buildContext() {
+      const p = negocioProfile;
+      // Datos reales de ticket.js (dirección, WhatsApp, Instagram ya están ahí)
+      const tc = (typeof TICKET_CONFIG !== 'undefined') ? TICKET_CONFIG.negocio : {};
+
+      const nombre    = p.nombre    || tc.nombre    || 'Mexitán';
+      const instagram = p.instagram || tc.instagram || '';
+      const whatsapp  = p.telefono  || tc.whatsapp  || '';
+      const web       = p.web       || tc.web       || '';
+      const direccion = p.direccion || tc.direccion || '';
+      // Extraído de la dirección real: "16 de Septiembre 18, La Cruz Coyuya, Iztacalco, CDMX, 08310"
+      const zona      = p.seoZona   || 'La Cruz Coyuya, Iztacalco, CDMX';
+      const location  = [p.colonia, p.ciudad].filter(Boolean).join(', ') || 'Iztacalco, CDMX';
+
+      const topDishes      = topProducts.slice(0, 5).map(([n, d]) => `${n} (${d.qty} pedidos)`).join(', ') || 'sin ventas registradas aún';
+      const catList        = menuCats.slice(0, 10).join(', ');
+      const menuList       = menuItems.slice(0, 20).map(i => i.n).join(', ');
+      const dishesWithImg  = menuItems.filter(i => i.img).map(i => i.n).slice(0, 15).join(', ');
+
+      return [
+        `Eres el community manager y experto en SEO local de ${nombre}. Escribe siempre en español mexicano.`,
+        `DATOS REALES DEL NEGOCIO (usa esta información, NUNCA inventes datos no incluidos aquí):`,
+        `- Nombre: ${nombre}`,
+        `- Tipo: ${p.descripcion || 'restaurante mexicano y café'}`,
+        direccion  ? `- Dirección: ${direccion}` : '',
+        `- Zona: ${location}`,
+        `- Palabras clave SEO local: ${zona}`,
+        p.horario  ? `- Horario: ${p.horario}` : '',
+        whatsapp   ? `- WhatsApp: ${whatsapp}` : '',
+        instagram  ? `- Instagram: ${instagram}` : '',
+        web        ? `- Web/Menú: ${web}` : '',
+        catList    ? `- Categorías del menú: ${catList}` : '',
+        menuList   ? `- Algunos platillos del menú: ${menuList}` : '',
+        dishesWithImg ? `- Platillos con foto real disponible (prioriza estos para posts de Instagram): ${dishesWithImg}` : '',
+        `- Más vendidos esta semana: ${topDishes}`,
+        p.especialidades  ? `- Especialidades destacadas: ${p.especialidades}` : '',
+        p.diferenciador   ? `- Lo que nos hace únicos: ${p.diferenciador}` : '',
+      ].filter(Boolean).join('\n');
+    }
+
+    async function loadNegocioProfile() {
+      // Defaults from ticket.js (already has real address, WhatsApp, Instagram)
+      const tc = (typeof TICKET_CONFIG !== 'undefined') ? TICKET_CONFIG.negocio : {};
+      const defaults = {
+        nombre:       tc.nombre    || 'Mexitán',
+        descripcion:  'Restaurante mexicano y café',
+        colonia:      'La Cruz Coyuya',
+        ciudad:       'Iztacalco, CDMX',
+        horario:      '',
+        telefono:     tc.whatsapp  || '',
+        instagram:    tc.instagram || '',
+        facebook:     '',
+        especialidades: '',
+        diferenciador:  '',
+        seoZona:      'La Cruz Coyuya, Iztacalco, CDMX',
+        direccion:    tc.direccion || '',
+        web:          tc.web       || '',
+      };
+
+      try {
+        const doc = await db.collection('config').doc('negocio').get();
+        // Merge: Firestore values override defaults
+        negocioProfile = doc.exists ? { ...defaults, ...doc.data() } : { ...defaults };
+      } catch (e) {
+        console.error('Error cargando perfil:', e);
+        negocioProfile = { ...defaults };
+      }
+
+      // Pre-fill form with real data (user only needs to add hours & differentiator)
+      PROFILE_FIELDS.forEach(({ id, key }) => {
+        const el = document.getElementById(id);
+        if (el && negocioProfile[key]) el.value = negocioProfile[key];
+      });
+    }
+
+    async function saveBusinessProfile() {
+      const profile = {};
+      PROFILE_FIELDS.forEach(({ id, key }) => {
+        const el = document.getElementById(id);
+        if (el) profile[key] = el.value.trim();
+      });
+      try {
+        await db.collection('config').doc('negocio').set(profile);
+        negocioProfile = profile;
+        toast('Perfil guardado ✓ — la IA ya usa tus datos reales');
+      } catch (e) {
+        console.error(e);
+        toast('Error al guardar perfil');
+      }
+    }
+
+    const toast = (m) => {
+      const t = document.getElementById('toast');
+      t.textContent = m; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    };
+
+    function swDash(section, el) {
+      document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      const target = document.getElementById('sd-' + section);
+      if (target) target.classList.add('active');
+      if (el) el.classList.add('active');
+    }
+
+    // Cargar datos
+    async function loadInitialData() {
+      try {
+        await loadNegocioProfile();
+
+        const menuDoc = await db.collection('config').doc('menu').get();
+        if (menuDoc.exists) {
+          const data = menuDoc.data().data || [];
+          menuItems = [];
+          menuCats = [];
+          data.forEach(cat => {
+            menuCats.push(cat.cat);
+            cat.items.forEach(item => menuItems.push({ ...item, cat: cat.cat }));
+          });
+        }
+
+        const snap = await db.collection('pedidos').orderBy('fecha', 'desc').limit(100).get();
+        const products = {};
+        snap.docs.forEach(doc => {
+          const data = doc.data();
+          Object.entries(data.items || {}).forEach(([name, item]) => {
+            if (!products[name]) products[name] = { qty: 0, total: 0 };
+            products[name].qty += item.qty;
+            products[name].total += (item.precio * item.qty);
+          });
+        });
+
+        topProducts = Object.entries(products).sort((a, b) => b[1].qty - a[1].qty).slice(0, 10);
+
+        renderTopSellers();
+        populateDishSelects();
+        generateAutoMarketing(); // Lanzar Autopilot
+
+        if (topProducts.length > 0) {
+          document.getElementById('topDishName').textContent = topProducts[0][0];
+          document.getElementById('topDishDesc').textContent = `Platillo estrella con ${topProducts[0][1].qty} ventas recientemente.`;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    // Posts generados en esta sesión (para exportar)
+    let generatedPosts = [];
+
+    async function generateAutoMarketing() {
+      const container = document.getElementById('autopilotContainer');
+      if (!container) return;
+      if (topProducts.length === 0) {
+        container.innerHTML = '<div class="emsg">No hay ventas suficientes para automatizar marketing aún. Realiza algunas ventas para que la IA pueda trabajar.</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      generatedPosts = [];
+      document.getElementById('btnExportPosts').style.display = 'none';
+      const targets = topProducts.slice(0, 2);
+
+      for (const [name, data] of targets) {
+        const card = document.createElement('div');
+        card.className = 'dash-card';
+        card.innerHTML = `
+        <div class="card-label">Sugerencia para: ${name}</div>
+        <div style="font-size:0.8rem; color:var(--s)">Generando contenido inteligente...</div>
+      `;
+        container.appendChild(card);
+
+        const prompt = `Eres el community manager del restaurante Mexitán. Responde EXACTAMENTE en este formato:\n[GBP] (2-3 oraciones para Google Business sobre "${name}", menciona Mexitán, invita a visitarnos)\n[SOCIAL] (caption creativo para Instagram/Facebook sobre "${name}" con 6 hashtags locales en español como #ComidaMexicana #RestauranteMexicano etc.)`;
+        const result = await callGemini(prompt);
+
+        if (result) {
+          const parts = result.split('[GBP]');
+          const sub = (parts[1] || result).split('[SOCIAL]');
+          const gbp = sub[0].trim();
+          const social = (sub[1] || "").trim();
+
+          // Guardar para exportación
+          generatedPosts.push({ platillo: name, google_business: gbp, instagram: social, fecha: new Date().toLocaleDateString('es-MX') });
+
+          card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <div class="card-label">Promoción: ${name}</div>
+            <span class="tag" style="background:var(--accent); color:#fff">Recomendado</span>
+          </div>
+          <div style="margin-top:0.5rem">
+            <h4 class="bsec" style="font-size:0.75rem; margin-bottom:0.2rem">Google Business</h4>
+            <div class="content-preview" id="gbp-${name}" style="font-size:0.75rem">${gbp}</div>
+          </div>
+          <div style="margin-top:0.5rem">
+            <h4 class="bsec" style="font-size:0.75rem; margin-bottom:0.2rem">Instagram / Facebook</h4>
+            <div class="content-preview" id="social-${name}" style="font-size:0.75rem">${social}</div>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap">
+            <button class="mcon" style="font-size:0.7rem; padding:0.4rem" onclick="navigator.clipboard.writeText(document.getElementById('gbp-${name}').textContent); toast('📋 Copiado para Google Business')">📋 Copiar para Google</button>
+            <button class="mcan" style="font-size:0.7rem; padding:0.4rem" onclick="navigator.clipboard.writeText(document.getElementById('social-${name}').textContent); toast('📱 Copiado para Instagram')">📱 Copiar para Instagram</button>
+          </div>
+        `;
+        }
+      }
+
+      if (generatedPosts.length > 0) {
+        document.getElementById('btnExportPosts').style.display = 'inline-flex';
+      }
+    }
+
+    function exportPosts(format) {
+      if (generatedPosts.length === 0) return toast("Genera contenido primero");
+      let content, filename, mime;
+
+      if (format === 'csv') {
+        // Formato CSV compatible con Buffer, Hootsuite, Later, Metricool
+        const headers = ['Platillo', 'Texto Google Business', 'Caption Instagram/Facebook', 'Fecha Sugerida'];
+        const rows = generatedPosts.map(p => [
+          `"${p.platillo}"`,
+          `"${p.google_business.replace(/"/g, "'")}"`  ,
+          `"${p.instagram.replace(/"/g, "'")}"`,
+          `"${p.fecha}"`
+        ].join(','));
+        content = [headers.join(','), ...rows].join('\n');
+        filename = `mexitan-posts-${new Date().toISOString().slice(0,10)}.csv`;
+        mime = 'text/csv';
+      } else {
+        // Formato JSON para integraciones personalizadas
+        content = JSON.stringify(generatedPosts, null, 2);
+        filename = `mexitan-posts-${new Date().toISOString().slice(0,10)}.json`;
+        mime = 'application/json';
+      }
+
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename; a.click();
+      URL.revokeObjectURL(url);
+      toast(`✅ Exportado como ${filename}`);
+    }
+
+    // Publicación automática eliminada — el usuario copia el contenido y lo publica manualmente
+
+    function renderTopSellers() {
+      const list = document.getElementById('topSellersList');
+      if (topProducts.length === 0) {
+        list.innerHTML = '<div class="emsg">No hay datos suficientes para mostrar el ranking.</div>';
+        return;
+      }
+      list.innerHTML = `
+      <div class="pthdr"><div>Platillo</div><div style="text-align:center">Ventas</div><div style="text-align:right">Total</div></div>
+      ${topProducts.slice(0, 5).map(([name, data]) => `
+        <div class="prow">
+          <div class="pn">${name}</div>
+          <div class="pq">${data.qty}</div>
+          <div class="ps">$${data.total}</div>
+        </div>
+      `).join('')}
+    `;
+    }
+
+    function populateDishSelects() {
+      const sel = document.getElementById('mktDish');
+      const visSel = document.getElementById('visDish');
+      const allDishes = Array.from(new Set([...topProducts.map(p => p[0]), ...menuItems.map(i => i.n)]));
+      sel.innerHTML = allDishes.map(name => `<option value="${name}">${name}</option>`).join('');
+      if (visSel) visSel.innerHTML = '<option value="">Selecciona del menú...</option>' +
+        menuItems.filter(i => i.img).map(i => `<option value="${i.img}">${i.n}</option>`).join('');
+    }
+
+    function loadDishImage() {
+      const imgUrl = document.getElementById('visDish').value;
+      if (!imgUrl) return;
+      currentImgData = imgUrl;
+      const img = document.getElementById('imgPreview');
+      img.src = imgUrl;
+      img.style.display = 'block';
+      document.getElementById('btnAnalyzeImg').style.display = 'block';
+      document.getElementById('dropZone').querySelector('p').style.display = 'none';
+      drawAd();
+    }
+
+
+    async function callGemini(prompt, isVision = false, dataInput = null) {
+      const functionUrl = "/api/callGeminiProxy";
+      const contents = [{ parts: [{ text: prompt }] }];
+      if (isVision && dataInput) {
+        let base64 = dataInput;
+        if (dataInput.startsWith('http')) {
+          try {
+            const proxyResp = await fetch(dataInput);
+            const blob = await proxyResp.blob();
+            base64 = await new Promise(resolve => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+          } catch (e) { return null; }
+        }
+        contents[0].parts.push({ inline_data: { mime_type: "image/jpeg", data: base64.split(',')[1] } });
+      }
+      try {
+        const resp = await fetch(functionUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents, model: "gemini-1.5-flash", systemInstruction: buildContext() })
+        });
+        const data = await resp.json();
+        if (data.candidates) return data.candidates[0].content.parts[0].text;
+        toast("Error de IA: " + (data.error?.message || "Sin respuesta")); return null;
+      } catch (e) { toast("Error de conexión segura"); return null; }
+    }
+
+    async function generateMarketingContent() {
+      const dish = document.getElementById('mktDish').value;
+      if (!dish) return toast("Selecciona platillo");
+      const tone = document.getElementById('mktTone').value;
+      const btn = document.getElementById('btnGenMkt');
+      btn.disabled = true; btn.textContent = "Generando...";
+      const prompt = `Eres el community manager del restaurante Mexitán. Responde EXACTAMENTE en este formato:\n[GBP] (2-3 oraciones en tono ${tone} para Google Business sobre "${dish}", invita a visitarnos en Mexitán)\n[SOCIAL] (caption en tono ${tone} para Instagram/Facebook sobre "${dish}" con 6 hashtags locales en español)`;
+      const result = await callGemini(prompt);
+      if (result) {
+        const parts = result.split('[GBP]');
+        const sub = (parts[1] || result).split('[SOCIAL]');
+        document.getElementById('prevGBP').textContent = sub[0].trim();
+        document.getElementById('prevSocial').textContent = (sub[1] || "").trim();
+        document.getElementById('customMktResult').style.display = 'flex';
+        toast("Contenido generado ✓");
+      }
+      btn.disabled = false; btn.textContent = "✨ Generar Contenido con IA";
+    }
+
+    async function generatePromoIdea() {
+      if (topProducts.length === 0) return;
+      const result = await callGemini(`Sugiere una promoción para "${topProducts[0][0]}" en 2 frases.`);
+      if (result) document.getElementById('promoIdea').textContent = result;
+    }
+
+    async function analyzeSEO() {
+      const dishList = topProducts.map(p => p[0]).join(', ');
+      const result = await callGemini(`Sugiere 5 keywords de SEO local para restaurante en México con: ${dishList}. Solo palabras separadas por comas.`);
+      if (result) {
+        const keywords = result.split(',').map(k => k.trim());
+        document.getElementById('seoKeywords').innerHTML = keywords.map(k => `<span class="tag">#${k}</span>`).join('');
+      }
+    }
+
+    let currentImgData = null;
+    function handleFile(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentImgData = e.target.result;
+        const img = document.getElementById('imgPreview');
+        img.src = currentImgData;
+        img.style.display = 'block';
+        document.getElementById('btnAnalyzeImg').style.display = 'block';
+        document.getElementById('dropZone').querySelector('p').style.display = 'none';
+        drawAd();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function analyzeImage() {
+      const btn = document.getElementById('btnAnalyzeImg');
+      btn.disabled = true; btn.textContent = "Analizando...";
+      const prompt = "Analiza este platillo de restaurante y responde EXACTAMENTE en este formato sin texto adicional:\n[ALT] descripción SEO del platillo en español (máx 120 caracteres, incluye nombre del platillo, ingredientes visibles y presentación)\n[TAGS] tag1, tag2, tag3, tag4, tag5";
+      const result = await callGemini(prompt, true, currentImgData);
+      if (result) {
+        document.getElementById('visionResults').style.display = 'block';
+        document.getElementById('btnAdCopy').style.display = 'flex';
+        const altMatch = result.match(/\[ALT\]\s*([\s\S]*?)(?=\[TAGS\]|$)/);
+        const tagsMatch = result.match(/\[TAGS\]\s*([\s\S]*?)$/);
+        const alt = altMatch ? altMatch[1].trim() : result.trim();
+        const tags = tagsMatch ? tagsMatch[1].split(',').map(t => t.trim()).filter(Boolean) : [];
+        document.getElementById('altTextResult').textContent = alt;
+        document.getElementById('visionTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+      }
+      btn.disabled = false; btn.textContent = "📸 Analizar con Gemini Vision";
+    }
+
+    async function generateAdCopy() {
+      const altText = document.getElementById('altTextResult').textContent;
+      if (!altText) return toast("Analiza una imagen primero");
+      const btn = document.getElementById('btnAdCopy');
+      btn.disabled = true; btn.textContent = "Generando...";
+      const result = await callGemini(`Basándote en este platillo: "${altText}". Escribe un texto de oferta muy corto (máx 4 palabras en mayúsculas) para superponer sobre la foto como anuncio. Solo el texto, sin explicaciones.`);
+      if (result) {
+        const adText = result.replace(/["'*\n]/g, '').trim().slice(0, 30);
+        document.getElementById('adText').value = adText;
+        drawAd();
+        toast("Copy generado — ajústalo si quieres ✓");
+      }
+      btn.disabled = false; btn.textContent = "✍️ Generar Copy para Anuncio";
+    }
+
+    function drawAd() {
+      const canvas = document.getElementById('adCanvas');
+      const ctx = canvas.getContext('2d');
+      const text = document.getElementById('adText').value;
+      const pos = document.getElementById('adPos').value;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (currentImgData) {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+          const x = (canvas.width / 2) - (img.width / 2) * scale;
+          const y = (canvas.height / 2) - (img.height / 2) * scale;
+          ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+          ctx.fillStyle = "rgba(22, 106, 40, 0.85)";
+          const h = 70; let ty = canvas.height - h;
+          if (pos === 'top') ty = 0; if (pos === 'middle') ty = (canvas.height / 2) - (h / 2);
+          ctx.fillRect(0, ty, canvas.width, h);
+          ctx.fillStyle = "white"; ctx.font = "800 32px 'Barlow Condensed'";
+          ctx.textAlign = "center"; ctx.fillText(text.toUpperCase(), canvas.width / 2, ty + 46);
+        };
+        img.src = currentImgData;
+      } else {
+        ctx.fillStyle = "#f3f5f3"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#566656"; ctx.font = "600 18px 'Barlow'"; ctx.textAlign = "center";
+        ctx.fillText("Sube una imagen para diseñar tu anuncio", canvas.width / 2, canvas.height / 2);
+      }
+    }
+
+    function downloadAd() {
+      if (!currentImgData) return;
+      const link = document.createElement('a');
+      link.download = 'mexitan-ad.png'; link.href = document.getElementById('adCanvas').toDataURL('image/png');
+      link.click();
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      // Monday-first offset: Sun(0)→6, Mon(1)→0, Tue(2)→1 ...
+      const rawFirst = new Date(year, month, 1).getDay();
+      const startOffset = rawFirst === 0 ? 6 : rawFirst - 1;
+
+      document.getElementById('calMonthYear').textContent =
+        now.toLocaleString('es-MX', { month: 'long', year: 'numeric' });
+
+      const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      let html = dayNames.map(d =>
+        `<div class="cal-day" style="background:#f0f4f0;min-height:32px;padding:0.3rem 0.5rem;justify-content:center">
+           <div class="cal-day-num" style="font-weight:800;color:var(--accent)">${d}</div>
+         </div>`
+      ).join('');
+
+      for (let i = 0; i < startOffset; i++)
+        html += `<div class="cal-day" style="background:#fafafa;min-height:80px"></div>`;
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayPosts = calendarData.filter(p => p.dia === day);
+        const chips = dayPosts.map((p, i) => {
+          const isIG = p.plataforma === 'Instagram';
+          const bg   = isIG ? 'var(--nl)' : '#e8f0fe';
+          const border = isIG ? 'var(--n)' : '#4285f4';
+          const icon   = isIG ? '📱' : '🔵';
+          const idx    = calendarData.indexOf(p);
+          const label  = p.titulo.length > 16 ? p.titulo.slice(0, 14) + '…' : p.titulo;
+          return `<div class="cal-post" style="background:${bg};border-left-color:${border}" onclick="showPostDetail(${idx})">${icon} ${label}</div>`;
+        }).join('');
+        html += `<div class="cal-day"><div class="cal-day-num">${day}</div>${chips}</div>`;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function findDishImage(titulo) {
+      if (!titulo || !menuItems.length) return null;
+      const q = titulo.toLowerCase();
+      // Exact name match first, then word-level partial match
+      return (
+        menuItems.find(i => i.img && q === i.n.toLowerCase())?.img ||
+        menuItems.find(i => i.img && q.includes(i.n.toLowerCase()))?.img ||
+        menuItems.find(i => i.img && i.n.toLowerCase().split(' ').some(w => w.length > 3 && q.includes(w)))?.img ||
+        null
+      );
+    }
+
+    async function generateSchedule() {
+      const freq    = parseInt(document.getElementById('schFreq').value);
+      const btn     = document.getElementById('btnGenSchedule');
+      const now     = new Date();
+      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const mes     = now.toLocaleString('es-MX', { month: 'long', year: 'numeric' });
+
+      btn.disabled = true; btn.textContent = 'Generando…';
+      toast('IA redactando posts del mes…');
+
+      const platillos = topProducts.slice(0, 8).map(p => p[0]).join(', ')
+        || menuItems.slice(0, 8).map(i => i.n).join(', ')
+        || 'platillos del menú';
+
+      const prompt =
+`Crea un plan de ${freq} posts por semana durante ${mes} (${daysInMonth} días) para Mexitán.
+Rota entre estos platillos: ${platillos}.
+Alterna entre Instagram y Google Business en días distintos.
+
+Responde ÚNICAMENTE con líneas en este formato, sin texto adicional ni numeración:
+DIA|PLATAFORMA|TITULO|TEXTO
+
+Reglas:
+- DIA: número del 1 al ${daysInMonth}
+- PLATAFORMA: exactamente "Instagram" o "Google Business"
+- TITULO: nombre corto del platillo o tema (máx 5 palabras)
+- TEXTO: caption completo listo para publicar. Instagram debe incluir 5-7 hashtags locales al final. Google Business menciona la dirección o el horario.
+- No uses el carácter | dentro del TEXTO.`;
+
+      const result = await callGemini(prompt);
+
+      if (result) {
+        calendarData = [];
+        result.split('\n').forEach(line => {
+          const parts = line.split('|');
+          if (parts.length < 4) return;
+          const dia = parseInt(parts[0].trim());
+          if (!dia || dia < 1 || dia > daysInMonth) return;
+          const titulo = parts[2].trim();
+          calendarData.push({
+            dia,
+            plataforma: parts[1].trim(),
+            titulo,
+            texto:    parts.slice(3).join('|').trim(),
+            fechaISO: new Date(now.getFullYear(), now.getMonth(), dia).toISOString().slice(0, 10),
+            img:      findDishImage(titulo),
+          });
+        });
+
+        calendarData.sort((a, b) => a.dia - b.dia);
+
+        // Guardar en Firestore para que persista entre sesiones
+        try {
+          await db.collection('config').doc('calendario').set({
+            posts: calendarData,
+            mes,
+            generado: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+        } catch (e) { console.error('Error guardando calendario:', e); }
+
+        renderCalendar();
+        document.getElementById('btnExportSchedule').style.display = 'flex';
+        toast(`Calendario listo: ${calendarData.length} posts generados ✓`);
+      } else {
+        toast('No se pudo generar el calendario. Intenta de nuevo.');
+      }
+
+      btn.disabled = false; btn.textContent = '✨ Auto-Programar Mes';
+    }
+
+    function showPostDetail(idx) {
+      const post = calendarData[idx];
+      if (!post) return;
+      const panel    = document.getElementById('postDetailPanel');
+      const imgEl    = document.getElementById('postDetailImg');
+      const imgNote  = document.getElementById('postDetailImgNote');
+      const isIG     = post.plataforma === 'Instagram';
+
+      document.getElementById('postDetailMeta').textContent =
+        `${isIG ? '📱' : '🔵'} ${post.plataforma}  ·  ${post.fechaISO}  ·  ${post.titulo}`;
+      document.getElementById('postDetailText').textContent = post.texto;
+
+      if (post.img) {
+        imgEl.src = post.img;
+        imgEl.style.display = 'block';
+        imgNote.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+        imgNote.style.display = 'none';
+      }
+
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function exportSchedule(format) {
+      if (calendarData.length === 0) return toast('Genera el calendario primero');
+      const now = new Date();
+      const mes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      let content, filename, mime;
+
+      if (format === 'csv') {
+        // Columnas compatibles con Buffer, Later, Hootsuite, Metricool
+        const headers = ['Fecha', 'Hora', 'Plataforma', 'Titulo', 'Texto', 'Imagen_URL'];
+        const rows = calendarData.map(p => [
+          `"${p.fechaISO}"`,
+          '"09:00"',
+          `"${p.plataforma}"`,
+          `"${p.titulo.replace(/"/g, "'")}"`,
+          `"${p.texto.replace(/"/g, "'")}"`,
+          `"${p.img || ''}"`,
+        ].join(','));
+        content = [headers.join(','), ...rows].join('\n');
+        filename = `mexitan-calendario-${mes}.csv`;
+        mime = 'text/csv;charset=utf-8;';
+      } else {
+        content = JSON.stringify({ mes, posts: calendarData }, null, 2);
+        filename = `mexitan-calendario-${mes}.json`;
+        mime = 'application/json';
+      }
+
+      const blob = new Blob(['﻿' + content], { type: mime }); // BOM para Excel
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = filename; a.click();
+      URL.revokeObjectURL(url);
+      toast(`✅ ${calendarData.length} posts exportados como ${filename}`);
+    }
+
+    async function loadSavedCalendar() {
+      try {
+        const doc = await db.collection('config').doc('calendario').get();
+        if (doc.exists && doc.data().posts?.length > 0) {
+          calendarData = doc.data().posts;
+          renderCalendar();
+          document.getElementById('btnExportSchedule').style.display = 'flex';
+        }
+      } catch (e) { console.error('Error cargando calendario:', e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadInitialData();
+      renderCalendar();
+      loadSavedCalendar();
+      drawAd();
+      firebase.auth().onAuthStateChanged(user => { if (!user) window.location.href = 'index.html'; });
+    });
+  </script>
+</body>
+
+</html>

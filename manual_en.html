@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual - Mexitán POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --v: #1e9438; --vo: #166a28; --vl: #e8f5ec; --n: #e8521c; --b: #ffffff; --t: #1a1a1a; --s: #6b7a6b; --bd: #cdd5cd;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Barlow', sans-serif;
+            line-height: 1.7;
+            color: var(--t);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fdfdfd;
+        }
+        header {
+            text-align: center;
+            border-bottom: 4px solid var(--n);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .logo { max-height: 80px; margin-bottom: 1rem; }
+        h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--vo);
+            text-transform: uppercase;
+            font-size: 2.2rem;
+            margin: 0;
+        }
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--n);
+            border-left: 5px solid var(--vo);
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+        }
+        h3 { color: var(--vo); margin-top: 1.5rem; }
+        code {
+            background: #eee;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            background: var(--vo);
+            color: var(--b);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .tip {
+            background: var(--vl);
+            border-left: 4px solid var(--v);
+            padding: .85rem 1rem;
+            margin: 1.2rem 0;
+            color: var(--vo);
+            border-radius: 0 6px 6px 0;
+        }
+        .warn {
+            background: #fff8f0;
+            border-left: 4px solid var(--n);
+            padding: .85rem 1rem;
+            margin: 1.2rem 0;
+            color: #7a3010;
+            border-radius: 0 6px 6px 0;
+        }
+        ul li { margin-bottom: .4rem; }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--s);
+            border-top: 1px solid var(--bd);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="Logo.png" alt="Mexitán Logo" class="logo">
+        <h1>User Manual</h1>
+        <p style="color: var(--s); font-weight: 600;">Point of Sale (POS) System — Mexitán Food & Drink</p>
+    </header>
+
+    <section>
+        <h2>1. Introduction</h2>
+        <p>Welcome to the <strong>Mexitán POS</strong> system. This app is designed to manage orders from any phone. It lets you handle tables, take orders, charge customers, print tickets, and generate reports.</p>
+        <p>The system is available in <strong>Spanish and English</strong>. Use the <strong>EN / ES</strong> button in the top-right corner to switch languages.</p>
+    </section>
+
+    <section>
+        <h2>2. Login</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Enter your authorized email and password on the welcome screen.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Tap <strong>Sign In</strong>. If credentials are correct, you will access the main orders dashboard.</p>
+        </div>
+        <div class="tip">💡 Only authorized staff can log in. If you forgot your password, contact the administrator.</div>
+    </section>
+
+    <section>
+        <h2>3. Mobile Navigation</h2>
+        <p>On phones, the screen is split into three panels accessed via the bottom navigation bar:</p>
+        <ul>
+            <li>🪑 <strong>Tables</strong> — list of open tables</li>
+            <li>🍽 <strong>Menu</strong> — product catalog to add to the order</li>
+            <li>🧾 <strong>Order</strong> — current order summary and charge button</li>
+        </ul>
+        <p>The bottom bar hides automatically when you switch to History, Summary, or Settings, and comes back when you return to Orders.</p>
+    </section>
+
+    <section>
+        <h2>4. Table Management</h2>
+        <h3>Opening a New Table</h3>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Tap the <strong>+ New Table</strong> button in the tables panel.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Enter the table name or number (or pick a suggestion) and confirm.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <p>The table appears in the list. When you open it, the system automatically tracks who is attending it.</p>
+        </div>
+
+        <h3>Selecting an Existing Table</h3>
+        <p>Tap any table in the list to view its current order or keep adding items.</p>
+
+        <div class="warn">⚠️ If someone else already has that table open on their phone, you will see a warning: <em>"[Name] is editing this order. Continue anyway?"</em> You can still proceed if needed.</div>
+
+        <h3>Closing a Table Without Charging</h3>
+        <p>Tap the <strong>✕</strong> next to the table name. If it has items, the system will ask for confirmation before deleting the order.</p>
+    </section>
+
+    <section>
+        <h2>5. Taking Orders</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>With a table selected, go to the <strong>Menu</strong> panel. Use the search bar or browse by category.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Tap a product to open it. You can add a special note (e.g., "no onions") before confirming.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <p>In the <strong>Order</strong> panel, adjust quantities with the <code>+</code> and <code>−</code> buttons, or tap the note icon (📝) to edit instructions for an item already added.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <p>Optionally, type the customer's name in the order text field.</p>
+        </div>
+        <div class="tip">💡 The trash icon (🗑) removes an item from the order completely.</div>
+    </section>
+
+    <section>
+        <h2>6. Charging and Payment</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Tap the <strong>Charge</strong> button in the order panel. It is only available when there is at least one item.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Select the payment method: <strong>💵 Cash</strong> or <strong>💳 Card</strong>.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <p>If paying by card, select the tip: <strong>0 / 5 / 10 / 15 / 20 %</strong> or enter a custom amount.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <p>Tap <strong>Confirm & Save</strong>. The sale is recorded, the table closes, and the history updates automatically.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">5</div>
+            <p>If you have a Bluetooth printer connected, the option to print the ticket will appear.</p>
+        </div>
+        <div class="tip">💡 The system automatically records who charged each order. This is visible in History next to each sale <em>(👤 Name)</em>.</div>
+        <div class="warn">⚠️ The button locks immediately when tapped to prevent duplicate charges. If something fails, it reactivates so you can try again.</div>
+    </section>
+
+    <section>
+        <h2>7. History and Summary</h2>
+        <p>Use the top tabs <strong>History</strong> and <strong>Daily Summary</strong>:</p>
+        <ul>
+            <li><strong>History:</strong> All orders within a date range. Each card shows the table, customer, time, payment method, and who charged it <em>(👤 Name)</em>. You can reprint any ticket by tapping the 🖨️ icon.</li>
+            <li><strong>Daily Summary:</strong> Total income, average ticket, breakdown by payment method, tips, and a ranking of best-selling products.</li>
+            <li><strong>Export CSV:</strong> Download the data in Excel format.</li>
+            <li><strong>Send by email:</strong> Send the report to the email address configured in ⚙ Settings.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>8. Settings ⚙️</h2>
+
+        <h3>Your Name in Reports</h3>
+        <p>Enter your name in the <strong>"Your name in reports"</strong> field and tap <strong>Save</strong>. This name will appear in History to identify who charged each order. <strong>Each person must set this on their own phone.</strong></p>
+
+        <h3>Report Destination Email</h3>
+        <p>Enter the email address where History and Summary reports will be sent when using the "Send by email" button.</p>
+
+        <h3>Bluetooth Printer</h3>
+        <p>Tap <strong>Connect printer</strong> and select your Bluetooth device from the list. Once connected, the system remembers it for future tickets. To unlink it, tap <strong>Disconnect</strong>.</p>
+
+        <h3>Menu Editor</h3>
+        <p>Here you can manage the full catalog:</p>
+        <ul>
+            <li><strong>+ New category</strong> — create a new section (e.g., "Desserts").</li>
+            <li><strong>Rename</strong> — change the name of a category.</li>
+            <li><strong>+ Item</strong> — add a product with a name and price to that category.</li>
+            <li><strong>Edit</strong> — modify the name or price of an existing product.</li>
+            <li><strong>Delete</strong> — remove a category (and all its products) or an individual item.</li>
+        </ul>
+        <div class="tip">💡 All menu changes sync automatically to all devices and to the public menu on the website.</div>
+        <div class="warn">⚠️ If the system cannot save a change (e.g., no internet), it automatically reverts to the previous state to avoid inconsistencies.</div>
+    </section>
+
+    <footer>
+        &copy; 2026 Mexitán Food & Drink. All rights reserved.
+    </footer>
+</body>
+</html>

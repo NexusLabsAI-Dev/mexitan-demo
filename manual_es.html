@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Mexitán POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --v: #1e9438; --vo: #166a28; --vl: #e8f5ec; --n: #e8521c; --b: #ffffff; --t: #1a1a1a; --s: #6b7a6b; --bd: #cdd5cd;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Barlow', sans-serif;
+            line-height: 1.7;
+            color: var(--t);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fdfdfd;
+        }
+        header {
+            text-align: center;
+            border-bottom: 4px solid var(--n);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .logo { max-height: 80px; margin-bottom: 1rem; }
+        h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--vo);
+            text-transform: uppercase;
+            font-size: 2.2rem;
+            margin: 0;
+        }
+        h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            color: var(--n);
+            border-left: 5px solid var(--vo);
+            padding-left: 1rem;
+            margin-top: 2.5rem;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+        }
+        h3 { color: var(--vo); margin-top: 1.5rem; }
+        code {
+            background: #eee;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            background: var(--vo);
+            color: var(--b);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .tip {
+            background: var(--vl);
+            border-left: 4px solid var(--v);
+            padding: .85rem 1rem;
+            margin: 1.2rem 0;
+            color: var(--vo);
+            border-radius: 0 6px 6px 0;
+        }
+        .warn {
+            background: #fff8f0;
+            border-left: 4px solid var(--n);
+            padding: .85rem 1rem;
+            margin: 1.2rem 0;
+            color: #7a3010;
+            border-radius: 0 6px 6px 0;
+        }
+        ul li { margin-bottom: .4rem; }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--s);
+            border-top: 1px solid var(--bd);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="Logo.png" alt="Mexitán Logo" class="logo">
+        <h1>Manual de Usuario</h1>
+        <p style="color: var(--s); font-weight: 600;">Sistema de Punto de Venta (POS) — Mexitán Food & Drink</p>
+    </header>
+
+    <section>
+        <h2>1. Introducción</h2>
+        <p>Bienvenido al sistema <strong>Mexitán POS</strong>. Esta aplicación está diseñada para gestionar los pedidos del negocio desde cualquier teléfono. Permite controlar mesas, tomar órdenes, cobrar, imprimir tickets y generar reportes.</p>
+        <p>El sistema está disponible en <strong>Español e Inglés</strong>. Usa el botón <strong>EN / ES</strong> en la esquina superior derecha para cambiar de idioma.</p>
+    </section>
+
+    <section>
+        <h2>2. Inicio de Sesión</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Ingresa tu correo electrónico y contraseña autorizados en la pantalla de bienvenida.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Toca <strong>Entrar</strong>. Si los datos son correctos, accederás al panel principal de pedidos.</p>
+        </div>
+        <div class="tip">💡 Solo el personal autorizado puede acceder. Si olvidaste tu contraseña, pide ayuda al administrador.</div>
+    </section>
+
+    <section>
+        <h2>3. Navegación en Móvil</h2>
+        <p>En teléfonos, la pantalla se divide en tres paneles que se navegan con la barra inferior:</p>
+        <ul>
+            <li>🪑 <strong>Mesas</strong> — lista de mesas abiertas</li>
+            <li>🍽 <strong>Menú</strong> — catálogo de productos para agregar a la orden</li>
+            <li>🧾 <strong>Orden</strong> — resumen del pedido actual y botón de cobro</li>
+        </ul>
+        <p>La barra inferior desaparece al entrar a Historial, Resumen o Configuración, y regresa al volver a Pedidos.</p>
+    </section>
+
+    <section>
+        <h2>4. Gestión de Mesas</h2>
+        <h3>Abrir una nueva mesa</h3>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Toca el botón <strong>+ Nueva Mesa</strong> en el panel de mesas.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Escribe el nombre o número de la mesa (o elige una sugerencia) y confirma.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <p>La mesa aparece en la lista. Al abrirla, el sistema registra automáticamente quién la está atendiendo.</p>
+        </div>
+
+        <h3>Seleccionar una mesa existente</h3>
+        <p>Toca cualquier mesa en la lista para ver su pedido actual o continuar agregando productos.</p>
+
+        <div class="warn">⚠️ Si otra persona ya tiene esa mesa abierta en su teléfono, el sistema mostrará un aviso: <em>"[Nombre] está editando esta orden. ¿Quieres continuar de todas formas?"</em> Puedes continuar si es necesario.</div>
+
+        <h3>Cerrar una mesa sin cobrar</h3>
+        <p>Toca la <strong>✕</strong> junto al nombre de la mesa. Si tiene productos, el sistema pedirá confirmación antes de borrar la orden.</p>
+    </section>
+
+    <section>
+        <h2>5. Toma de Pedidos</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Con una mesa seleccionada, ve al panel de <strong>Menú</strong>. Usa el buscador o navega por categorías.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Toca un producto para abrirlo. Puedes agregar una nota especial (ej. "sin cebolla") antes de confirmar.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <p>En el panel de <strong>Orden</strong>, ajusta cantidades con los botones <code>+</code> y <code>−</code>, o toca el ícono de nota (📝) para editar las instrucciones de un producto ya agregado.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <p>Opcionalmente, escribe el nombre del cliente en el campo de texto de la orden.</p>
+        </div>
+        <div class="tip">💡 El icono de la papelera (🗑) quita completamente un producto de la orden.</div>
+    </section>
+
+    <section>
+        <h2>6. Cobro y Pago</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <p>Toca el botón <strong>Cobrar</strong> en el panel de la orden. Solo está disponible cuando hay al menos un producto.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <p>Selecciona el método de pago: <strong>💵 Efectivo</strong> o <strong>💳 Tarjeta</strong>.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <p>Si es tarjeta, elige la propina: <strong>0 / 5 / 10 / 15 / 20 %</strong> o un monto personalizado.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <p>Toca <strong>Confirmar y Guardar</strong>. La venta se registra, la mesa se cierra y el historial se actualiza automáticamente.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">5</div>
+            <p>Si tienes una impresora Bluetooth conectada, aparecerá la opción de imprimir el ticket.</p>
+        </div>
+        <div class="tip">💡 El sistema registra automáticamente quién cobró cada pedido. Esto se ve en el Historial junto a cada venta.</div>
+        <div class="warn">⚠️ El botón se bloquea al tocarlo para evitar cobros duplicados. Si algo falla, se reactiva para que puedas intentar de nuevo.</div>
+    </section>
+
+    <section>
+        <h2>7. Historial y Resumen</h2>
+        <p>Usa las pestañas superiores <strong>Historial</strong> y <strong>Resumen del Día</strong>:</p>
+        <ul>
+            <li><strong>Historial:</strong> Todos los pedidos en un rango de fechas. Cada tarjeta muestra mesa, cliente, hora, método de pago y quién cobró <em>(👤 Nombre)</em>. Puedes reimprimir cualquier ticket tocando el ícono 🖨️.</li>
+            <li><strong>Resumen del Día:</strong> Ingresos totales, ticket promedio, desglose por método de pago, propinas y ranking de productos más vendidos.</li>
+            <li><strong>Exportar CSV:</strong> Descarga los datos en formato Excel.</li>
+            <li><strong>Enviar por correo:</strong> Envía el reporte al correo configurado en ⚙ Configuración.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>8. Configuración ⚙️</h2>
+
+        <h3>Tu nombre en reportes</h3>
+        <p>Escribe tu nombre en el campo <strong>"Tu nombre en reportes"</strong> y toca <strong>Guardar</strong>. Este nombre aparecerá en el Historial para identificar quién cobró cada pedido. <strong>Cada persona debe configurarlo en su propio teléfono.</strong></p>
+
+        <h3>Correo destino para reportes</h3>
+        <p>Ingresa el correo al que se enviarán los reportes de Historial y Resumen al usar el botón "Enviar por correo".</p>
+
+        <h3>Impresora Bluetooth</h3>
+        <p>Toca <strong>Conectar impresora</strong> y selecciona tu dispositivo Bluetooth de la lista. Una vez conectada, el sistema la recuerda para imprimir tickets al cobrar. Para desvincularla, toca <strong>Desconectar</strong>.</p>
+
+        <h3>Editor de Menú</h3>
+        <p>Aquí puedes gestionar el catálogo completo:</p>
+        <ul>
+            <li><strong>+ Nueva categoría</strong> — crea una sección nueva (ej. "Postres").</li>
+            <li><strong>Renombrar</strong> — cambia el nombre de una categoría.</li>
+            <li><strong>+ Producto</strong> — agrega un producto con nombre y precio a esa categoría.</li>
+            <li><strong>Editar</strong> — modifica el nombre o precio de un producto existente.</li>
+            <li><strong>Eliminar</strong> — borra una categoría (con todos sus productos) o un producto individual.</li>
+        </ul>
+        <div class="tip">💡 Todos los cambios del menú se sincronizan automáticamente con todos los dispositivos y también con el menú público de la página web.</div>
+        <div class="warn">⚠️ Si el sistema no puede guardar un cambio (por ejemplo, por falta de internet), revierte automáticamente al estado anterior para evitar inconsistencias.</div>
+    </section>
+
+    <footer>
+        &copy; 2026 Mexitán Food & Drink. Todos los derechos reservados.
+    </footer>
+</body>
+</html>
