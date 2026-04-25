@@ -831,7 +831,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
       $('loginScreen').style.display='none';
       const cfgU=$('cfgUserEmail');if(cfgU)cfgU.textContent=user.email||'';
       await verificarLicencia();
-      await aplicarRol(user);
       tourAutoStart();
       if(!menuData.length){ await loadMenu(); buildMenu(); }
     } else {
@@ -1817,25 +1816,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.addEventListener('controllerchange',()=>{
       window.location.reload();
     });
-  });
-}
-
-// ═══════════════════════
-// ROLES
-// ═══════════════════════
-let esAdmin=false;
-
-async function aplicarRol(user){
-  try{
-    const snap=await db.collection('usuarios').doc(user.uid).get();
-    esAdmin=snap.exists && snap.data().admin===true;
-  }catch(_){ esAdmin=false; }
-
-  // Pestañas solo para admin
-  const tabsAdmin=['c','g','b']; // Config, Gastos, Compras
-  tabsAdmin.forEach(tab=>{
-    const btn=document.querySelector(`button[data-tab="${tab}"]`);
-    if(btn) btn.style.display=esAdmin?'':'none';
   });
 }
 
