@@ -374,7 +374,7 @@
 </div>
 
 <!-- MOBILE BOTTOM NAV (solo visible en móvil) -->
-<nav class="mob-nav" id="mobNav" style="display:none">
+<nav class="mob-nav" id="mobNav">
   <div class="mob-nav-inner">
   <button id="mbn-mesas" onclick="swMobPanel('mesas')">
     <span class="mnicon">🪑</span>
@@ -1040,7 +1040,7 @@ function updMobBadge(){
 }
 function initMobile(){
   const mob=isMobile();
-  $('mobNav').style.display=mob?'flex':'none';
+  $('mobNav').classList.toggle('mob-visible', mob);
   if(mob){
     swMobPanel('mesas');
   } else {
@@ -1164,7 +1164,7 @@ function swTab(btn){
     rendMenuEditor();
   }
   // Ocultar nav móvil fuera de Pedidos
-  if(isMobile()) $('mobNav').style.display = (tab==='p') ? 'flex' : 'none';
+  if(isMobile()) $('mobNav').classList.toggle('mob-hide', tab!=='p');
 }
 
 // ═══════════════════════
