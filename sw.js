@@ -1,4 +1,4 @@
-const CACHE = 'gestion-os-v1';
+const CACHE = 'gestoros-v1';
 
 // Al instalar, toma control inmediato sin esperar
 self.addEventListener('install', e => {

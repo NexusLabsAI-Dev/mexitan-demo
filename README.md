@@ -1,6 +1,6 @@
-# Gestion OS
+# GestorOS
  
-Sistema interno de punto de venta y gestión de pedidos.
+Sistema operativo para gestores de negocios gastronómicos. Empodera a usuarios para controlar su operación sin complicaciones. Escala de micro café a cadena de restaurantes.
 
 ## Características
 
@@ -35,7 +35,7 @@ Sistema interno de punto de venta y gestión de pedidos.
 ## Estructura de archivos
 
 ```
-gestion-os/
+gestoros/
 ├── index.html          # Aplicación principal (toda la lógica SPA)
 ├── style.css           # Diseño system, variables de marca, responsive
 ├── ticket.js           # Config del ticket de impresión (editable)

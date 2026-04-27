@@ -1,11 +1,11 @@
 {
-  "name": "Gestion OS",
-  "short_name": "Gestion OS",
-  "description": "Sistema de gestión y pedidos",
+  "name": "GestorOS",
+  "short_name": "GestorOS",
+  "description": "Sistema de gestión y pedidos profesional",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#166a28",
-  "theme_color": "#166a28",
+  "background_color": "#F5F7FA",
+  "theme_color": "#1B3A5F",
   "orientation": "any",
   "icons": [
     {

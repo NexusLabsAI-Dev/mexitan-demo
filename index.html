@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestion OS</title>
+  <title>GestorOS</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#166a28" />
+  <meta name="theme-color" content="#1B3A5F" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Gestion OS" />
+  <meta name="apple-mobile-web-app-title" content="GestorOS" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -37,9 +37,9 @@
 <div id="loginScreen">
   <div class="loginBox">
     <div class="loginLogo">
-      <div style="font-size:2.2rem;font-weight:800;letter-spacing:-.02em;color:#c9a84c;font-family:'Barlow Condensed',sans-serif">POS</div>
+      <div class="hlogo">Gestor<span>OS</span></div>
     </div>
-    <div class="loginTitle" id="loginTitle">Sistema de Pedidos</div>
+    <div class="loginTitle" id="loginTitle">GestorOS</div>
     <div class="loginField">
       <label>Correo</label>
       <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="username" />
@@ -69,7 +69,7 @@
 
 <header>
   <div style="display:flex;align-items:center;gap:.75rem">
-    <div style="font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#c9a84c;font-family:'Barlow Condensed',sans-serif">Gestion OS</div>
+    <div class="hlogo">Gestor<span>OS</span></div>
     <div class="hdate" id="hDate"></div>
   </div>
   <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;justify-content:flex-end">
@@ -612,7 +612,7 @@ function _timerTick(){
 let _regMode = false;
 function toggleLoginMode(){
   _regMode = !_regMode;
-  document.getElementById('loginTitle').textContent = _regMode ? 'Crear cuenta' : 'Gestion OS';
+  document.getElementById('loginTitle').textContent = _regMode ? 'Crear cuenta' : 'GestorOS';
   document.getElementById('loginPassConf').style.display = _regMode ? '' : 'none';
   document.getElementById('loginBtn').textContent = _regMode ? 'Crear cuenta' : 'Entrar';
   document.getElementById('loginToggleMsg').textContent = _regMode ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?';
@@ -1812,7 +1812,7 @@ async function expHistorial(){
   const pedidos=await getPedidosRango(desde,hasta);
   if(!pedidos.length){toast(t('toast_no_ped_exp'));return;}
   const porFecha={};pedidos.forEach(p=>{if(!porFecha[p.fecha])porFecha[p.fecha]=[];porFecha[p.fecha].push(p);});
-  const filas=[['Gestion OS - Historial'],['Periodo:',labelRango(desde,hasta)],[''],
+  const filas=[['GestorOS - Historial'],['Periodo:',labelRango(desde,hasta)],[''],
     ['Fecha','#','Mesa','Cliente','Hora','Producto','Precio Unit.','Cantidad','Subtotal','Total Orden']];
   let totalGlobal=0;
   Object.keys(porFecha).sort().forEach(f=>{
@@ -1848,7 +1848,7 @@ async function expResumen(){
     if(!pr[n])pr[n]={precio:v.precio,qty:0,total:0};pr[n].qty+=v.qty;pr[n].total+=v.precio*v.qty;
   }));
   const so=Object.entries(pr).sort((a,b)=>b[1].qty-a[1].qty);const lbl=labelRango(desde,hasta);
-  const filas=[['Gestion OS - Resumen'],['Periodo:',lbl],[''],
+  const filas=[['GestorOS - Resumen'],['Periodo:',lbl],[''],
     ['RESUMEN FINANCIERO',''],
     ['Ventas Totales','$'+td],
     ['Pedidos realizados',pedidos.length],
@@ -1905,7 +1905,7 @@ async function emailHistorial(){
   if(!pedidos.length){toast(t('toast_no_ped_env'));return;}
   const totalG=pedidos.reduce((s,p)=>s+p.total,0);const lbl=labelRango(desde,hasta);
   const porFecha={};pedidos.forEach(p=>{if(!porFecha[p.fecha])porFecha[p.fecha]=[];porFecha[p.fecha].push(p);});
-  let msg='Gestion OS - HISTORIAL\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
+  let msg='GestorOS - HISTORIAL\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
   Object.keys(porFecha).sort().forEach(f=>{
     const arr=porFecha[f];const tF=arr.reduce((s,p)=>s+p.total,0);
     msg+=f+'  ('+arr.length+' pedidos - $'+tF+')\n'+'-'.repeat(44)+'\n';
@@ -1916,7 +1916,7 @@ async function emailHistorial(){
     });
   });
   msg+='='.repeat(44)+'\nTOTAL: $'+totalG+' | Pedidos: '+pedidos.length+' | Ticket: $'+Math.round(totalG/pedidos.length);
-  abrirEmailModal('Enviar Historial','Gestion OS - Historial '+lbl+' ($'+totalG+')',msg);
+  abrirEmailModal('Enviar Historial','GestorOS - Historial '+lbl+' ($'+totalG+')',msg);
 }
 async function emailResumen(){
   const desde=$('rdesde').value,hasta=$('rhasta').value;
@@ -1935,12 +1935,12 @@ async function emailResumen(){
     if(!pr[n])pr[n]={precio:v.precio,qty:0,total:0};pr[n].qty+=v.qty;pr[n].total+=v.precio*v.qty;
   }));
   const so=Object.entries(pr).sort((a,b)=>b[1].qty-a[1].qty);const lbl=labelRango(desde,hasta);
-  let msg='Gestion OS - RESUMEN\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
+  let msg='GestorOS - RESUMEN\nPeriodo: '+lbl+'\n'+'='.repeat(44)+'\n\n';
   msg+='Ventas Totales:    $'+td+'\nPedidos:           '+pedidos.length+'\nCaja (Efvo+Abonos):$'+(tEfectivo + tAbonos)+'\nGastos (Egresos):  -$'+tGastos+'\nVentas Tarjeta:    $'+tTarjeta+'\nVentas A Cuenta:   $'+tCuenta+'\nProductos Dist.:   '+so.length+'\n\n';
   msg+='-'.repeat(44)+'\nPRODUCTOS (mayor a menor)\n'+'-'.repeat(44)+'\n';
   so.forEach(([n,v])=>{msg+=n.substring(0,28).padEnd(30)+' x'+String(v.qty).padStart(3)+'  $'+v.total+'\n';});
   msg+='='.repeat(44)+'\nTOTAL VENTAS: $'+td;
-  abrirEmailModal('Enviar Resumen','Gestion OS - Resumen '+lbl+' ($'+td+')',msg);
+  abrirEmailModal('Enviar Resumen','GestorOS - Resumen '+lbl+' ($'+td+')',msg);
 }
 
 // ═══════════════════════
@@ -2125,7 +2125,7 @@ async function verificarLicencia(){
 // TOUR
 // ═══════════════════════
 const TOUR_STEPS=[
-  {target:null,      title:'¡Bienvenido a Gestion OS!', desc:'Te mostramos en 6 pasos las secciones principales del sistema. Puedes repetir este tour cuando quieras con el botón <strong>?</strong>.'},
+  {target:null,      title:'¡Bienvenido a GestorOS!', desc:'Te mostramos en 6 pasos las secciones principales del sistema. Puedes repetir este tour cuando quieras con el botón <strong>?</strong>.'},
   {target:'#tourMesas',  title:'Panel de Mesas',  desc:'Aquí ves todas las mesas activas. Usa <strong>+ Nueva mesa</strong> para abrir una y empezar a tomar pedidos.'},
   {target:'#tourBtnMesa',title:'Crear una mesa',  desc:'Cada vez que llega un cliente presiona este botón. Puedes nombrarla con el nombre del cliente o el número de mesa.'},
   {target:'#tourMenu',   title:'Menú',            desc:'Selecciona los platillos o bebidas que pide el cliente. Se agregan automáticamente al pedido de la mesa activa.'},

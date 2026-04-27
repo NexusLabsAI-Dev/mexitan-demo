@@ -1,5 +1,5 @@
 // ============================================================
-//  Gestion OS — Configuracion del ticket de impresion
+//  GestorOS — Configuracion del ticket de impresion
 //  Archivo editable independiente del sistema principal
 //  Modificar este archivo no afecta la base de datos ni el POS
 // ============================================================

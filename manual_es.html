@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual de Usuario - Gestion OS</title>
+    <title>Manual de Usuario - GestorOS</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --v: #1e9438; --vo: #166a28; --vl: #e8f5ec; --n: #e8521c; --b: #ffffff; --t: #1a1a1a; --s: #6b7a6b; --bd: #cdd5cd;
+            --primary: #1B3A5F;
+            --primary-dark: #12263F;
+            --secondary: #FF8C00;
+            --bg: #F5F7FA;
+            --surface: #FFFFFF;
+            --text: #2D3E50;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
         }
         * { box-sizing: border-box; }
         body {
@@ -21,28 +28,28 @@
         }
         header {
             text-align: center;
-            border-bottom: 4px solid var(--n);
+            border-bottom: 4px solid var(--secondary);
             padding-bottom: 1.5rem;
             margin-bottom: 2rem;
         }
         .logo { max-height: 80px; margin-bottom: 1rem; }
         h1 {
             font-family: 'Barlow Condensed', sans-serif;
-            color: var(--vo);
+            color: var(--primary);
             text-transform: uppercase;
             font-size: 2.2rem;
             margin: 0;
         }
         h2 {
             font-family: 'Barlow Condensed', sans-serif;
-            color: var(--n);
-            border-left: 5px solid var(--vo);
+            color: var(--secondary);
+            border-left: 5px solid var(--primary);
             padding-left: 1rem;
             margin-top: 2.5rem;
             text-transform: uppercase;
             font-size: 1.3rem;
         }
-        h3 { color: var(--vo); margin-top: 1.5rem; }
+        h3 { color: var(--primary); margin-top: 1.5rem; }
         code {
             background: #eee;
             padding: 0.2rem 0.4rem;
@@ -56,8 +63,8 @@
             margin-bottom: 1rem;
         }
         .step-num {
-            background: var(--vo);
-            color: var(--b);
+            background: var(--primary);
+            color: var(--surface);
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -97,14 +104,14 @@
 </head>
 <body>
     <header>
-        <img src="Logo.png" alt="Mexitán Logo" class="logo">
+        <img src="Logo.png" alt="GestorOS Logo" class="logo">
         <h1>Manual de Usuario</h1>
-        <p style="color: var(--s); font-weight: 600;">Gestion OS — Sistema de gestión y pedidos</p>
+        <p style="color: var(--text-muted); font-weight: 600;">GestorOS — Sistema de gestión y pedidos profesional</p>
     </header>
 
     <section>
         <h2>1. Introducción</h2>
-        <p>Bienvenido al sistema <strong>Gestion OS</strong>. Esta aplicación está diseñada para gestionar los pedidos del negocio desde cualquier teléfono. Permite controlar mesas, tomar órdenes, cobrar, imprimir tickets y generar reportes.</p>
+        <p>Bienvenido al sistema <strong>GestorOS</strong>. Esta aplicación está diseñada para gestionar los pedidos del negocio desde cualquier teléfono de forma profesional y eficiente. Permite controlar mesas, tomar órdenes, cobrar, imprimir tickets y generar reportes inteligentes.</p>
         <p>El sistema está disponible en <strong>Español e Inglés</strong>. Usa el botón <strong>EN / ES</strong> en la esquina superior derecha para cambiar de idioma.</p>
     </section>
 
