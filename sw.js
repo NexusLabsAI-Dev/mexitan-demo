@@ -1,4 +1,4 @@
-const CACHE = 'mexitan-pos-v4';
+const CACHE = 'gestion-os-v1';
 
 // Al instalar, toma control inmediato sin esperar
 self.addEventListener('install', e => {

@@ -1,5 +1,5 @@
 // ============================================================
-//  MEXITAN POS — Configuracion del ticket de impresion
+//  Gestion OS — Configuracion del ticket de impresion
 //  Archivo editable independiente del sistema principal
 //  Modificar este archivo no afecta la base de datos ni el POS
 // ============================================================

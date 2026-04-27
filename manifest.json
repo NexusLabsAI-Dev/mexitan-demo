@@ -1,7 +1,7 @@
 {
-  "name": "Mexitán — Sistema de Pedidos",
-  "short_name": "Mexitán POS",
-  "description": "Sistema de pedidos para Mexitán Food & Drink",
+  "name": "Gestion OS",
+  "short_name": "Gestion OS",
+  "description": "Sistema de gestión y pedidos",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#166a28",

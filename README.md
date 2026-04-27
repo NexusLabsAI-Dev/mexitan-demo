@@ -1,6 +1,6 @@
-# Mexitán POS
-
-Sistema interno de punto de venta y gestión de pedidos para Mexitán Food & Drink.
+# Gestion OS
+ 
+Sistema interno de punto de venta y gestión de pedidos.
 
 ## Características
 
@@ -35,7 +35,7 @@ Sistema interno de punto de venta y gestión de pedidos para Mexitán Food & Dri
 ## Estructura de archivos
 
 ```
-mexitan-pos/
+gestion-os/
 ├── index.html          # Aplicación principal (toda la lógica SPA)
 ├── style.css           # Diseño system, variables de marca, responsive
 ├── ticket.js           # Config del ticket de impresión (editable)
